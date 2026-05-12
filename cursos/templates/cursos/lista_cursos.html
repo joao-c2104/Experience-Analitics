@@ -7,6 +7,46 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
         h1 { text-align: center; color: #333; }
+
+        .barra-busca {
+            display: flex;
+            gap: 10px;
+            max-width: 620px;
+            margin: 0 auto 28px;
+        }
+
+        .barra-busca input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .barra-busca button,
+        .limpar-busca {
+            border: 0;
+            border-radius: 6px;
+            background: #005b96;
+            color: white;
+            padding: 12px 18px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .limpar-busca {
+            display: inline-flex;
+            align-items: center;
+            background: #6c757d;
+        }
+
+        .resultado-busca {
+            max-width: 1200px;
+            margin: 0 auto 18px;
+            color: #555;
+            text-align: center;
+        }
         
         .grade-cursos {
             display: grid;
@@ -39,6 +79,26 @@
 <body>
 
     <h1>Cursos Disponíveis</h1>
+
+    <form class="barra-busca" method="get" action="{% url 'buscar_cursos' %}">
+        <input
+            type="search"
+            name="q"
+            value="{{ query|default:'' }}"
+            placeholder="Buscar cursos..."
+            aria-label="Buscar cursos"
+        >
+        <button type="submit">Buscar</button>
+        {% if query %}
+            <a class="limpar-busca" href="{% url 'lista_cursos' %}">Limpar</a>
+        {% endif %}
+    </form>
+
+    {% if query %}
+        <p class="resultado-busca">
+            {{ total_resultados }} resultado{{ total_resultados|pluralize }} para "{{ query }}"
+        </p>
+    {% endif %}
 
     <div class="grade-cursos">
         {% for curso in cursos %}
