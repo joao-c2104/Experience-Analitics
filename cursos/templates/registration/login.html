@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | Experience Analytics</title>
+    <link rel="stylesheet" href="{% static 'cursos/login.css' %}">
+</head>
+<body>
+    <header class="topbar">
+        <strong class="brand">Experience Analytics</strong>
+        <nav>
+            <a href="#">Cursos</a>
+            <a href="#">Eventos</a>
+            <a href="#">Conteúdos</a>
+            <a href="{% url 'login' %}">Entrar</a>
+        </nav>
+    </header>
+
+    <main class="login-page">
+        <section class="welcome">
+            <div>
+                <span class="eyebrow">Plataforma de cursos</span>
+                <h1>Bem-vindo de volta!</h1>
+                <p>Acesse sua conta para continuar aprendendo e acompanhar seus cursos disponíveis.</p>
+            </div>
+
+            <div class="benefits">
+                <article>
+                    <span>01</span>
+                    <div>
+                        <strong>Aprenda</strong>
+                        <p>Cursos e capacitações para seu crescimento.</p>
+                    </div>
+                </article>
+                <article>
+                    <span>02</span>
+                    <div>
+                        <strong>Gerencie</strong>
+                        <p>Acompanhe seus conteúdos em um só lugar.</p>
+                    </div>
+                </article>
+                <article>
+                    <span>03</span>
+                    <div>
+                        <strong>Conecte-se</strong>
+                        <p>Entre na plataforma e continue sua jornada.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="login-card" aria-labelledby="login-title">
+            <h2 id="login-title">Acesse sua conta</h2>
+            <p>Informe seus dados para entrar na plataforma</p>
+
+            {% if form.errors %}
+                <div class="form-error">Usuário ou senha inválidos. Tente novamente.</div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <label for="{{ form.username.id_for_label }}">Usuário</label>
+                <input
+                    type="text"
+                    name="{{ form.username.html_name }}"
+                    id="{{ form.username.id_for_label }}"
+                    autocomplete="username"
+                    placeholder="Digite seu usuário"
+                    value="{{ form.username.value|default_if_none:'' }}"
+                    required
+                >
+
+                <label for="{{ form.password.id_for_label }}">Senha</label>
+                <div class="password-field">
+                    <input
+                        type="password"
+                        name="{{ form.password.html_name }}"
+                        id="{{ form.password.id_for_label }}"
+                        autocomplete="current-password"
+                        placeholder="Digite sua senha"
+                        required
+                    >
+                    <button type="button" id="toggle-password" aria-label="Mostrar senha">Ver</button>
+                </div>
+
+                <div class="form-row">
+                    <label class="remember">
+                        <input type="checkbox" name="remember">
+                        Lembrar meu acesso
+                    </label>
+                    <a href="#">Esqueci minha senha</a>
+                </div>
+
+                <button class="primary-button" type="submit">Entrar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <strong>Experience Analytics</strong>
+        <span>© 2026 Plataforma de Cursos</span>
+    </footer>
+
+    <script src="{% static 'cursos/login.js' %}"></script>
+</body>
+</html>

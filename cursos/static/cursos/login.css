@@ -1,0 +1,266 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #17213f;
+    background: #f6f9ff;
+}
+
+.topbar {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    background: #fff;
+    border-bottom: 1px solid #dfe7f7;
+}
+
+.brand {
+    color: #1656d9;
+    font-size: 18px;
+}
+
+.topbar nav {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+}
+
+.topbar a {
+    color: #243152;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.login-page {
+    min-height: calc(100vh - 156px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 72px;
+    align-items: center;
+    width: min(1160px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 48px 0;
+}
+
+.welcome {
+    display: grid;
+    gap: 34px;
+}
+
+.eyebrow {
+    display: block;
+    margin-bottom: 12px;
+    color: #1656d9;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.welcome h1 {
+    max-width: 420px;
+    margin: 0;
+    color: #17213f;
+    font-size: 48px;
+    line-height: 1.05;
+}
+
+.welcome p {
+    max-width: 440px;
+    color: #53607d;
+    line-height: 1.6;
+}
+
+.benefits {
+    display: grid;
+    gap: 18px;
+}
+
+.benefits article {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 14px;
+    align-items: start;
+}
+
+.benefits span {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    color: #1656d9;
+    background: #eaf0ff;
+    font-weight: 700;
+}
+
+.benefits strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.benefits p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.login-card {
+    padding: 42px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 18px 60px rgba(23, 33, 63, 0.12);
+}
+
+.login-card h2 {
+    margin: 0 0 8px;
+    text-align: center;
+    font-size: 28px;
+}
+
+.login-card > p {
+    margin: 0 0 30px;
+    text-align: center;
+    color: #66728d;
+    font-size: 14px;
+}
+
+.form-error {
+    margin-bottom: 18px;
+    padding: 12px;
+    border-radius: 6px;
+    color: #8a1f1f;
+    background: #ffe9e9;
+    font-size: 14px;
+}
+
+form {
+    display: grid;
+    gap: 12px;
+}
+
+label {
+    color: #253457;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    border: 1px solid #d7def0;
+    border-radius: 6px;
+    color: #17213f;
+    outline: none;
+}
+
+input:focus {
+    border-color: #1656d9;
+    box-shadow: 0 0 0 3px rgba(22, 86, 217, 0.12);
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 58px;
+}
+
+.password-field button {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    height: 34px;
+    border: 0;
+    border-radius: 6px;
+    color: #1656d9;
+    background: #eef4ff;
+    cursor: pointer;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    margin: 2px 0 8px;
+}
+
+.remember {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: #53607d;
+    font-weight: 400;
+}
+
+.form-row a {
+    color: #1656d9;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.primary-button {
+    height: 50px;
+    border: 0;
+    border-radius: 6px;
+    color: #fff;
+    background: #1656d9;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.primary-button:hover {
+    background: #0f45b5;
+}
+
+.footer {
+    min-height: 92px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 48px;
+    color: #fff;
+    background: #0647d9;
+}
+
+@media (max-width: 860px) {
+    .topbar {
+        height: auto;
+        display: grid;
+        gap: 14px;
+        padding: 18px 24px;
+    }
+
+    .topbar nav {
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .login-page {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        width: min(100% - 32px, 520px);
+        padding: 32px 0;
+    }
+
+    .welcome h1 {
+        font-size: 36px;
+    }
+
+    .login-card {
+        padding: 28px;
+    }
+
+    .footer {
+        display: grid;
+        gap: 8px;
+        padding: 24px;
+    }
+}

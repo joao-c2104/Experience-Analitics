@@ -38,6 +38,13 @@
 </head>
 <body>
 
+    <form action="{% url 'logout' %}" method="post" style="text-align: right; max-width: 1200px; margin: 0 auto 20px;">
+        {% csrf_token %}
+        <button type="submit" style="border: 0; background: #005b96; color: #fff; padding: 10px 16px; border-radius: 6px; cursor: pointer;">
+            Sair
+        </button>
+    </form>
+
     <h1>Cursos Disponíveis</h1>
 
     <div class="grade-cursos">
