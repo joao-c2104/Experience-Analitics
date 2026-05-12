@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Cursos</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        h1 { text-align: center; color: #333; }
+        
+        .grade-cursos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card-curso {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .card-curso:hover { transform: scale(1.05); }
+
+        .card-curso img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-curso h3 { padding: 15px; margin: 0; color: #005b96; font-size: 18px;}
+    </style>
+</head>
+<body>
+
+    <h1>Cursos Disponíveis</h1>
+
+    <div class="grade-cursos">
+        {% for curso in cursos %}
+            <div class="card-curso">
+                {% if curso.imagem %}
+                    <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}">
+                {% endif %}
+                <h3>{{ curso.nome }}</h3>
+            </div>
+        {% empty %}
+            <p>Nenhum curso cadastrado ainda.</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
