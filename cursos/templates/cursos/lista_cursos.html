@@ -5,8 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma de Cursos</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        h1 { text-align: center; color: #333; }
+        .btn-sair {
+            background-color: #e74c3c !important;
+            color: white !important;
+        }
+
+        .btn-sair:hover {
+            background-color: #c0392b !important;
+        }
+
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding-bottom: 20px; }
+        
+        .navbar {
+            background-color: #005b96;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h2 { margin: 0; font-size: 24px; }
+        
+        .menu a {
+            color: #005b96;
+            background-color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .menu a:hover {
+            background-color: #e0e0e0;
+        }
+
+        .menu span { margin-right: 15px; font-weight: bold; }
+
+        h1 { text-align: center; color: #333; margin-top: 30px; }
         
         .grade-cursos {
             display: grid;
@@ -14,6 +52,7 @@
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         .card-curso {
@@ -26,24 +65,24 @@
         }
 
         .card-curso:hover { transform: scale(1.05); }
-
-        .card-curso img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-
+        .card-curso img { width: 100%; height: 150px; object-fit: cover; }
         .card-curso h3 { padding: 15px; margin: 0; color: #005b96; font-size: 18px;}
     </style>
 </head>
 <body>
 
-    <form action="{% url 'logout' %}" method="post" style="text-align: right; max-width: 1200px; margin: 0 auto 20px;">
-        {% csrf_token %}
-        <button type="submit" style="border: 0; background: #005b96; color: #fff; padding: 10px 16px; border-radius: 6px; cursor: pointer;">
-            Sair
-        </button>
-    </form>
+    <div class="navbar">
+        <h2>Sebrae Cursos (Clone)</h2>
+        <div class="menu">
+            {% if user.is_authenticated %}
+                <span>Olá, {{ user.username }}!</span>
+                <a href="{% url 'perfil' %}">Meu Perfil</a>
+                <a href="{% url 'sair' %}" class="btn-sair">Sair</a>
+            {% else %}
+                <a href="/admin/">Entrar</a> 
+            {% endif %}
+        </div>
+    </div>
 
     <h1>Cursos Disponíveis</h1>
 
@@ -56,7 +95,7 @@
                 <h3>{{ curso.nome }}</h3>
             </div>
         {% empty %}
-            <p>Nenhum curso cadastrado ainda.</p>
+            <p style="text-align: center; grid-column: 1 / -1;">Nenhum curso cadastrado ainda.</p>
         {% endfor %}
     </div>
 
