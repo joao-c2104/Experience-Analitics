@@ -47,9 +47,37 @@
                 <a href="{% url 'acao_curso' curso.id %}" class="btn btn-concluir">Marcar Curso como Concluído</a>
             {% elif inscricao.status == 'concluido' %}
                 <span class="btn btn-concluido">✓ Curso Concluído!</span>
+
+                <div style="margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 5px; border: 1px solid #ddd; text-align: center;">
+                    
+                    <div id="nota-exibicao-detalhe" {% if inscricao.nota is null %}style="display:none;"{% endif %}>
+                        <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">⭐ Sua Nota: {{ inscricao.nota }}/10</p>
+                        <button type="button" onclick="mostrarFormularioDetalhe()" style="background: none; color: #3498db; border: none; padding: 0; font-size: 14px; font-weight: bold; cursor: pointer;">[ Alterar Nota ]</button>
+                    </div>
+
+                    <div id="nota-form-detalhe" {% if inscricao.nota is not null %}style="display:none;"{% endif %}>
+                        <form action="{% url 'avaliar_curso' inscricao.id %}?next=detalhe" method="POST">
+                            {% csrf_token %}
+                            <label style="font-weight: bold; display: block; margin-bottom: 10px;">Avalie este curso:</label>
+                            <select name="nota" required style="padding: 8px; font-size: 16px; border-radius: 4px;">
+                                {% for i in "0123456789" %}
+                                    <option value="{{ forloop.counter0 }}" {% if inscricao.nota == forloop.counter0 %}selected{% endif %}>{{ forloop.counter0 }}</option>
+                                {% endfor %}
+                                <option value="10" {% if inscricao.nota == 10 %}selected{% endif %}>10</option>
+                            </select>
+                            <button type="submit" style="background: #27ae60; color: white; border: none; padding: 8px 15px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 10px;">Enviar Nota</button>
+                        </form>
+                    </div>
+
+                </div>
             {% endif %}
         {% endif %}
     </div>
-
+<script>
+        function mostrarFormularioDetalhe() {
+            document.getElementById('nota-exibicao-detalhe').style.display = 'none';
+            document.getElementById('nota-form-detalhe').style.display = 'block';
+        }
+    </script>
 </body>
 </html>

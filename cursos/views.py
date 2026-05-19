@@ -48,3 +48,40 @@ def acao_curso(request, curso_id):
         inscricao.save()
         
     return redirect('detalhe_curso', curso_id=curso.id)
+
+@login_required
+def perfil(request):
+    minhas_inscricoes = Inscricao.objects.filter(usuario=request.user)
+    
+    cursos_andamento = minhas_inscricoes.filter(status='andamento')
+    cursos_concluidos = minhas_inscricoes.filter(status='concluido')
+    
+    total_comprados = minhas_inscricoes.count()
+    total_concluidos = cursos_concluidos.count()
+    
+    return render(request, 'cursos/perfil.html', {
+        'cursos_andamento': cursos_andamento,
+        'cursos_concluidos': cursos_concluidos,
+        'total_comprados': total_comprados,
+        'total_concluidos': total_concluidos
+    })
+
+@login_required
+def avaliar_curso(request, inscricao_id):
+    inscricao = get_object_or_404(Inscricao, id=inscricao_id, usuario=request.user)
+        
+    if request.method == "POST":
+        if inscricao.status == 'concluido':
+            nota_enviada = request.POST.get('nota')
+            if nota_enviada and 0 <= int(nota_enviada) <= 10:
+                inscricao.nota = int(nota_enviada)
+                inscricao.save()
+                
+    elif request.method == "GET" and request.GET.get('alterar') == 'true':
+        inscricao.nota = None
+        inscricao.save()
+
+    origem = request.GET.get('next', 'perfil')
+    if origem == 'detalhe':
+        return redirect('detalhe_curso', curso_id=inscricao.curso.id)
+    return redirect('perfil')

@@ -5,54 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil - Cursos</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding-bottom: 40px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         h1, h2 { color: #333; }
-        .cabecalho { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;}
+        
+        .navbar { background-color: #005b96; color: white; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px;}
+        .navbar a { color: #005b96; background-color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; }
+
+        .painel-status {
+            display: flex;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .status-card {
+            flex: 1;
+            text-align: center;
+            border-right: 1px solid #eee;
+        }
+        .status-card:last-child { border-right: none; }
+        .status-card num { display: block; font-size: 32px; font-weight: bold; color: #005b96; }
+        .status-card label { color: #666; font-size: 14px; }
         
         .grade-cursos {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
             margin-bottom: 40px;
         }
-
         .card-curso {
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             overflow: hidden;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-
         .card-curso img { width: 100%; height: 150px; object-fit: cover; }
-        .card-curso h3 { padding: 15px; margin: 0; color: #005b96; font-size: 18px;}
+        .card-info { padding: 15px; text-align: center; flex-grow: 1; }
+        .card-info h3 { margin: 0 0 10px 0; color: #005b96; font-size: 18px;}
         
-        .status { padding: 5px 10px; color: white; font-weight: bold; display: block;}
+        .tempo-curso { font-size: 13px; color: #7f8c8d; margin-top: 5px; font-style: italic; }
+        .status { padding: 5px 10px; color: white; font-weight: bold; display: block; text-align: center;}
         .status.andamento { background-color: #f39c12; }
         .status.concluido { background-color: #27ae60; }
+
+        .form-avaliacao { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+        .form-avaliacao select { padding: 5px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc; }
+        .form-avaliacao button { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 5px; }
+        .nota-dada { font-weight: bold; color: #2c3e50; font-size: 15px; margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
 
+    <div class="navbar">
+        <h2>Olá, {{ user.username }}!</h2>
+        <a href="/">Voltar para Vitrine</a>
+    </div>
+
     <div class="container">
-        <div class="cabecalho">
-            <h1>Olá, {{ user.username }}!</h1>
-            <a href="/">Voltar para Vitrine</a>
+        
+        <h2>Status do Perfil</h2>
+        <div class="painel-status">
+            <div class="status-card">
+                <num>{{ total_comprados }}</num>
+                <label>Cursos Adquiridos</label>
+            </div>
+            <div class="status-card">
+                <num>{{ total_concluidos }}</num>
+                <label>Cursos Finalizados</label>
+            </div>
         </div>
 
         <h2>Cursos em Andamento</h2>
         <div class="grade-cursos">
             {% for inscricao in cursos_andamento %}
                 <div class="card-curso">
-                    {% if inscricao.curso.imagem %}
-                        <img src="{{ inscricao.curso.imagem.url }}" alt="{{ inscricao.curso.nome }}">
-                    {% endif %}
-                    <h3>{{ inscricao.curso.nome }}</h3>
+                    <div>
+                        {% if inscricao.curso.imagem %}
+                            <img src="{{ inscricao.curso.imagem.url }}" alt="{{ inscricao.curso.nome }}">
+                        {% endif %}
+                        <div class="card-info">
+                            <h3>{{ inscricao.curso.nome }}</h3>
+                            <p class="tempo-curso">⏳ Você está fazendo este curso há <b>{{ inscricao.dias_em_andamento }}</b> dia(s).</p>
+                        </div>
+                    </div>
                     <span class="status andamento">Em Andamento</span>
                 </div>
             {% empty %}
-                <p>Você não possui cursos em andamento no momento.</p>
+                <p style="grid-column: 1/-1; color: #7f8c8d;">Você não possui cursos em andamento.</p>
             {% endfor %}
         </div>
 
@@ -60,17 +105,49 @@
         <div class="grade-cursos">
             {% for inscricao in cursos_concluidos %}
                 <div class="card-curso">
-                    {% if inscricao.curso.imagem %}
-                        <img src="{{ inscricao.curso.imagem.url }}" alt="{{ inscricao.curso.nome }}">
-                    {% endif %}
-                    <h3>{{ inscricao.curso.nome }}</h3>
+                    <div>
+                        {% if inscricao.curso.imagem %}
+                            <img src="{{ inscricao.curso.imagem.url }}" alt="{{ inscricao.curso.nome }}">
+                        {% endif %}
+                        <div class="card-info">
+                            <h3>{{ inscricao.curso.nome }}</h3>
+                            
+                            <div class="form-avaliacao">
+                                <div id="nota-exibicao-{{ inscricao.id }}" {% if inscricao.nota is null %}style="display:none;"{% endif %}>
+                                    <span class="nota-dada">⭐ Sua Nota: <b id="valor-nota-{{ inscricao.id }}">{{ inscricao.nota }}</b><b>/10</b></span>
+                                    
+                                    <button type="button" onclick="mostrarFormularioAvaliacao('{{ inscricao.id }}')" style="background: none; color: #3498db; border: none; padding: 0; font-size: 12px; font-weight: bold; cursor: pointer; display: block; margin: 5px auto 0 auto;">[ Alterar Nota ]</button>
+                                </div>
+
+                                <div id="nota-form-{{ inscricao.id }}" {% if inscricao.nota is not null %}style="display:none;"{% endif %}>
+                                    <form action="{% url 'avaliar_curso' inscricao.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <label for="nota">Avalie o curso: </label>
+                                        <select name="nota" id="nota" required>
+                                            {% for i in "0123456789" %}
+                                                <option value="{{ forloop.counter0 }}" {% if inscricao.nota == forloop.counter0 %}selected{% endif %}>{{ forloop.counter0 }}</option>
+                                            {% endfor %}
+                                            <option value="10" {% if inscricao.nota == 10 %}selected{% endif %}>10</option>
+                                        </select>
+                                        <button type="submit">Enviar</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
                     <span class="status concluido">Concluído!</span>
                 </div>
             {% empty %}
-                <p>Nenhum curso concluído ainda. Continue estudando!</p>
+                <p style="grid-column: 1/-1; color: #7f8c8d;">Nenhum curso concluído ainda.</p>
             {% endfor %}
         </div>
     </div>
-
+<script>
+        function mostrarFormularioAvaliacao(id) {
+            document.getElementById('nota-exibicao-' + id).style.display = 'none';
+            document.getElementById('nota-form-' + id).style.display = 'block';
+        }
+    </script>
 </body>
 </html>

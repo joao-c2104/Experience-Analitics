@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Curso(models.Model):
     nome = models.CharField(max_length=200)
@@ -21,6 +22,13 @@ class Inscricao(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='andamento')
     data_inscricao = models.DateTimeField(auto_now_add=True)
+    nota = models.IntegerField(null=True, blank=True)
+
+    @property
+    def dias_em_andamento(self):
+        agora = timezone.now()
+        diferenca = agora - self.data_inscricao
+        return max(1, diferenca.days)
 
     def __str__(self):
         return f"{self.usuario.username} - {self.curso.nome}"
