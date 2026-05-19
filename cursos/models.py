@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 class Curso(models.Model):
     nome = models.CharField(max_length=200)
     imagem = models.ImageField(upload_to='cursos_imagens/')
+    resumo = models.CharField(max_length=250, default="Resumo do curso...")
+    descricao = models.TextField(default="Descrição detalhada do curso...")
+    preco = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     
     def __str__(self):
         return self.nome

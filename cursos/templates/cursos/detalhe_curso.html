@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ curso.nome }} - Detalhes</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .voltar { text-decoration: none; color: #005b96; font-weight: bold; }
+        img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-top: 20px; }
+        h1 { color: #333; margin-top: 20px; }
+        .preco { font-size: 24px; color: #2ecc71; font-weight: bold; margin: 20px 0; }
+        .descricao { font-size: 16px; color: #555; line-height: 1.6; }
+        
+        .btn { display: block; text-align: center; text-decoration: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 5px; margin-top: 30px; color: white; transition: background 0.3s; }
+        .btn-comprar { background-color: #2ecc71; }
+        .btn-comprar:hover { background-color: #27ae60; }
+        .btn-concluir { background-color: #f39c12; }
+        .btn-concluir:hover { background-color: #d35400; }
+        .btn-concluido { background-color: #7f8c8d; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="/" class="voltar">← Voltar para a Vitrine</a>
+        
+        {% if curso.imagem %}
+            <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}">
+        {% endif %}
+        
+        <h1>{{ curso.nome }}</h1>
+        <p class="preco">R$ {{ curso.preco }}</p>
+        
+        <div class="descricao">
+            <h3>Sobre este curso:</h3>
+            <p>{{ curso.descricao }}</p>
+        </div>
+
+        {% if not user.is_authenticated %}
+            <a href="/admin/" class="btn btn-comprar">Faça login para Comprar</a>
+        {% else %}
+            {% if not inscricao %}
+                <a href="{% url 'acao_curso' curso.id %}" class="btn btn-comprar">Comprar Curso</a>
+            {% elif inscricao.status == 'andamento' %}
+                <a href="{% url 'acao_curso' curso.id %}" class="btn btn-concluir">Marcar Curso como Concluído</a>
+            {% elif inscricao.status == 'concluido' %}
+                <span class="btn btn-concluido">✓ Curso Concluído!</span>
+            {% endif %}
+        {% endif %}
+    </div>
+
+</body>
+</html>

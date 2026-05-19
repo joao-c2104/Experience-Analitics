@@ -93,6 +93,9 @@
                     <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}">
                 {% endif %}
                 <h3>{{ curso.nome }}</h3>
+                <p style="padding: 0 15px; color: #666; font-size: 14px;">{{ curso.resumo }}</p>
+                <p style="font-weight: bold; color: #2ecc71; font-size: 18px; margin: 10px 0;">R$ {{ curso.preco }}</p>
+                <a href="{% url 'detalhe_curso' curso.id %}" style="display: block; background: #005b96; color: white; text-decoration: none; padding: 10px; margin: 10px; border-radius: 5px; font-weight: bold;">Ver Detalhes</a>
             </div>
         {% empty %}
             <p style="text-align: center; grid-column: 1 / -1;">Nenhum curso cadastrado ainda.</p>
