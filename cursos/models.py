@@ -23,6 +23,8 @@ class Inscricao(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='andamento')
     data_inscricao = models.DateTimeField(auto_now_add=True)
     nota = models.IntegerField(null=True, blank=True)
+    ultima_interacao = models.DateField(null=True, blank=True)
+    dias_seguidos = models.IntegerField(default=0)
 
     @property
     def dias_em_andamento(self):
@@ -30,5 +32,11 @@ class Inscricao(models.Model):
         diferenca = agora - self.data_inscricao
         return max(1, diferenca.days)
 
+    @property
+    def acessado_hoje(self):
+        if self.ultima_interacao:
+            return self.ultima_interacao == timezone.now().date()
+        return False
+    
     def __str__(self):
         return f"{self.usuario.username} - {self.curso.nome}"

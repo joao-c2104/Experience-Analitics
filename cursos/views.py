@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .models import Curso, Inscricao
+from django.utils import timezone
+from datetime import timedelta
 
 @login_required
 def lista_cursos(request):
@@ -30,6 +32,16 @@ def detalhe_curso(request, curso_id):
     
     if request.user.is_authenticated:
         inscricao = Inscricao.objects.filter(usuario=request.user, curso=curso).first()
+        if inscricao and inscricao.status == 'andamento':
+            hoje = timezone.now().date()
+            
+            if inscricao.ultima_interacao != hoje:
+                if inscricao.ultima_interacao == hoje - timedelta(days=1):
+                    inscricao.dias_seguidos += 1
+                else:
+                    inscricao.dias_seguidos = 1
+                inscricao.ultima_interacao = hoje
+                inscricao.save()
         
     return render(request, 'cursos/detalhe_curso.html', {
         'curso': curso,
@@ -42,7 +54,7 @@ def acao_curso(request, curso_id):
     inscricao = Inscricao.objects.filter(usuario=request.user, curso=curso).first()
     
     if not inscricao:
-        Inscricao.objects.create(usuario=request.user, curso=curso, status='andamento')
+        Inscricao.objects.create(usuario=request.user, curso=curso, status='andamento', ultima_interacao=timezone.now().date(), dias_seguidos=1)
     elif inscricao.status == 'andamento':
         inscricao.status = 'concluido'
         inscricao.save()

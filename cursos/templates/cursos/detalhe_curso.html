@@ -45,6 +45,17 @@
                 <a href="{% url 'acao_curso' curso.id %}" class="btn btn-comprar">Comprar Curso</a>
             {% elif inscricao.status == 'andamento' %}
                 <a href="{% url 'acao_curso' curso.id %}" class="btn btn-concluir">Marcar Curso como Concluído</a>
+
+                <div style="margin-top: 15px; padding: 15px; border-radius: 6px; text-align: center; font-size: 15px; font-weight: bold;
+                            {% if inscricao.acessado_hoje %} background-color: #e8f8f5; color: #27ae60; border: 1px solid #a3e4d7; {% else %} background-color: #fdf2e9; color: #d35400; border: 1px solid #f5cba7; {% endif %}">
+                    
+                    {% if inscricao.acessado_hoje %}
+                        🎉 Ofensiva de hoje garantida! Você já estudou este curso hoje.
+                    {% else %}
+                        ⏳ Computando presença... Entre nesta aba diariamente para manter seus dias seguidos atualizados!
+                    {% endif %}
+                </div>
+
             {% elif inscricao.status == 'concluido' %}
                 <span class="btn btn-concluido">✓ Curso Concluído!</span>
 
@@ -73,7 +84,8 @@
             {% endif %}
         {% endif %}
     </div>
-<script>
+
+    <script>
         function mostrarFormularioDetalhe() {
             document.getElementById('nota-exibicao-detalhe').style.display = 'none';
             document.getElementById('nota-form-detalhe').style.display = 'block';

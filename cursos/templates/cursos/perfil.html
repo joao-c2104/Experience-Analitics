@@ -92,6 +92,15 @@
                         <div class="card-info">
                             <h3>{{ inscricao.curso.nome }}</h3>
                             <p class="tempo-curso">⏳ Você está fazendo este curso há <b>{{ inscricao.dias_em_andamento }}</b> dia(s).</p>
+                            {% if inscricao.dias_seguidos > 0 %}
+                                <p style="font-size: 14px; color: #e67e22; font-weight: bold; margin-top: 5px;">🔥 Ofensiva: {{ inscricao.dias_seguidos }} dia(s) seguidos</p>
+                                {% if inscricao.acessado_hoje %}
+                                        <span style="background-color: #2ecc71; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase;">Hoje ✅</span>
+                                    {% else %}
+                                        <span style="background-color: #e67e22; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase;">Falta Hoje ⏳</span>
+                                    {% endif %}
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
                     <span class="status andamento">Em Andamento</span>
