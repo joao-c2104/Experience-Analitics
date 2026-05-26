@@ -11,7 +11,7 @@
         img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-top: 20px; }
         h1 { color: #333; margin-top: 20px; }
         .preco { font-size: 24px; color: #2ecc71; font-weight: bold; margin: 20px 0; }
-        .descricao { font-size: 16px; color: #555; line-height: 1.6; }
+        .descricao { font-size: 16px; color: #555; line-height: 1.6; margin-bottom: 30px; }
         
         .btn { display: block; text-align: center; text-decoration: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 5px; margin-top: 30px; color: white; transition: background 0.3s; }
         .btn-comprar { background-color: #2ecc71; }
@@ -19,6 +19,13 @@
         .btn-concluir { background-color: #f39c12; }
         .btn-concluir:hover { background-color: #d35400; }
         .btn-concluido { background-color: #7f8c8d; cursor: not-allowed; }
+
+        /* Estilos da Seção de Comentários Públicos */
+        .secao-comentarios { margin-top: 50px; border-top: 2px solid #eee; padding-top: 30px; }
+        .card-comentario { background: #fdfdfd; border: 1px solid #eaeaea; padding: 15px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .autor-comentario { font-weight: bold; color: #2c3e50; font-size: 14px; margin: 0 0 5px 0; }
+        .texto-comentario { color: #555; font-size: 15px; margin: 0; font-style: italic; }
+        .nota-comentario { color: #f1c40f; font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -62,27 +69,47 @@
                 <div style="margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 5px; border: 1px solid #ddd; text-align: center;">
                     
                     <div id="nota-exibicao-detalhe" {% if inscricao.nota is null %}style="display:none;"{% endif %}>
-                        <p style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">⭐ Sua Nota: {{ inscricao.nota }}/10</p>
-                        <button type="button" onclick="mostrarFormularioDetalhe()" style="background: none; color: #3498db; border: none; padding: 0; font-size: 14px; font-weight: bold; cursor: pointer;">[ Alterar Nota ]</button>
+                        <p style="font-size: 18px; font-weight: bold; margin: 0 0 5px 0;">⭐ Sua Nota: {{ inscricao.nota }}/10</p>
+                        {% if inscricao.pensamento %}
+                            <p style="font-size: 15px; color: #555; margin: 0 0 15px 0; font-style: italic;">"{{ inscricao.pensamento }}"</p>
+                        {% endif %}
+                        <button type="button" onclick="mostrarFormularioDetalhe()" style="background: none; color: #3498db; border: none; padding: 0; font-size: 14px; font-weight: bold; cursor: pointer;">[ Alterar Nota ou Comentário ]</button>
                     </div>
 
                     <div id="nota-form-detalhe" {% if inscricao.nota is not null %}style="display:none;"{% endif %}>
                         <form action="{% url 'avaliar_curso' inscricao.id %}?next=detalhe" method="POST">
                             {% csrf_token %}
                             <label style="font-weight: bold; display: block; margin-bottom: 10px;">Avalie este curso:</label>
-                            <select name="nota" required style="padding: 8px; font-size: 16px; border-radius: 4px;">
+                            <select name="nota" required style="padding: 8px; font-size: 16px; border-radius: 4px; margin-bottom: 15px;">
                                 {% for i in "0123456789" %}
                                     <option value="{{ forloop.counter0 }}" {% if inscricao.nota == forloop.counter0 %}selected{% endif %}>{{ forloop.counter0 }}</option>
                                 {% endfor %}
                                 <option value="10" {% if inscricao.nota == 10 %}selected{% endif %}>10</option>
                             </select>
-                            <button type="submit" style="background: #27ae60; color: white; border: none; padding: 8px 15px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 10px;">Enviar Nota</button>
+
+                            <label style="font-weight: bold; display: block; margin-bottom: 10px;">Compartilhe seu pensamento sobre o curso (Público):</label>
+                            <textarea name="pensamento" rows="4" placeholder="O que você achou do conteúdo? Seu comentário ficará visível na página." style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px; border-radius: 4px; border: 1px solid #ccc; resize: vertical; margin-bottom: 15px;">{% if inscricao.pensamento %}{{ inscricao.pensamento }}{% endif %}</textarea>
+
+                            <button type="submit" style="background: #27ae60; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">Enviar Avaliação</button>
                         </form>
                     </div>
 
                 </div>
             {% endif %}
         {% endif %}
+
+        <div class="secao-comentarios">
+            <h2>💭 Pensamentos dos Alunos ({{ pensamentos_publicos.count }})</h2>
+            {% for p in pensamentos_publicos %}
+                <div class="card-comentario">
+                    <p class="autor-comentario">👤 {{ p.usuario.username }} <span class="nota-comentario">— ⭐ {{ p.nota }}/10</span></p>
+                    <p class="texto-comentario">"{{ p.pensamento }}"</p>
+                </div>
+            {% empty %}
+                <p style="color: #7f8c8d; font-style: italic;">Nenhum aluno compartilhou um pensamento sobre este curso ainda. Conclua o curso e seja o primeiro!</p>
+            {% endfor %}
+        </div>
+
     </div>
 
     <script>

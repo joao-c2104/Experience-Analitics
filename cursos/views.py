@@ -10,18 +10,6 @@ def lista_cursos(request):
     cursos = Curso.objects.all()
     return render(request, 'cursos/lista_cursos.html', {'cursos': cursos})
 
-@login_required
-def perfil(request):
-    minhas_inscricoes = Inscricao.objects.filter(usuario=request.user)
-    
-    cursos_andamento = minhas_inscricoes.filter(status='andamento')
-    cursos_concluidos = minhas_inscricoes.filter(status='concluido')
-    
-    return render(request, 'cursos/perfil.html', {
-        'cursos_andamento': cursos_andamento,
-        'cursos_concluidos': cursos_concluidos
-    })
-
 def fazer_logout(request):
     logout(request)
     return redirect('lista_cursos')
@@ -42,10 +30,17 @@ def detalhe_curso(request, curso_id):
                     inscricao.dias_seguidos = 1
                 inscricao.ultima_interacao = hoje
                 inscricao.save()
-        
+    
+    # BUSCA OS PENSAMENTOS PÚBLICOS: Apenas de inscrições concluídas e que não estejam vazias
+    pensamentos_publicos = Inscricao.objects.filter(
+        curso=curso, 
+        status='concluido'
+    ).exclude(pensamento__isnull=True).exclude(pensamento='')
+            
     return render(request, 'cursos/detalhe_curso.html', {
         'curso': curso,
-        'inscricao': inscricao
+        'inscricao': inscricao,
+        'pensamentos_publicos': pensamentos_publicos
     })
 
 @login_required
@@ -63,6 +58,7 @@ def acao_curso(request, curso_id):
 
 @login_required
 def perfil(request):
+    # Juntamos as duas funções perfil que estavam duplicadas
     minhas_inscricoes = Inscricao.objects.filter(usuario=request.user)
     
     cursos_andamento = minhas_inscricoes.filter(status='andamento')
@@ -85,9 +81,15 @@ def avaliar_curso(request, inscricao_id):
     if request.method == "POST":
         if inscricao.status == 'concluido':
             nota_enviada = request.POST.get('nota')
+            pensamento_enviado = request.POST.get('pensamento') # Captura o pensamento
+            
             if nota_enviada and 0 <= int(nota_enviada) <= 10:
                 inscricao.nota = int(nota_enviada)
-                inscricao.save()
+                
+            if pensamento_enviado:
+                inscricao.pensamento = pensamento_enviado.strip()
+                
+            inscricao.save()
                 
     elif request.method == "GET" and request.GET.get('alterar') == 'true':
         inscricao.nota = None

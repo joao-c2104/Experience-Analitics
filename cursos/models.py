@@ -25,6 +25,7 @@ class Inscricao(models.Model):
     nota = models.IntegerField(null=True, blank=True)
     ultima_interacao = models.DateField(null=True, blank=True)
     dias_seguidos = models.IntegerField(default=0)
+    pensamento = models.TextField(null=True, blank=True)
 
     @property
     def dias_em_andamento(self):
