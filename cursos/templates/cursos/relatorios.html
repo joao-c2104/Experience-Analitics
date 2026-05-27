@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatórios</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 30px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 8px; }
+        h1 { color: #005b96; }
+        .btn-relatorio {
+            display: block;
+            background: #005b96;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .btn-relatorio:hover { background: #00416d; }
+        a { color: #005b96; font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="{% url 'lista_cursos' %}">← Voltar</a>
+
+    <h1>Relatórios</h1>
+
+    {% for relatorio in relatorios %}
+        <a class="btn-relatorio" href="{% url 'detalhe_relatorio' relatorio.id %}">
+            Relatório de {{ relatorio.usuario.username }} - {{ relatorio.curso.nome }}
+        </a>
+    {% empty %}
+        <p>Nenhum relatório foi gerado ainda.</p>
+    {% endfor %}
+</div>
+</body>
+</html>

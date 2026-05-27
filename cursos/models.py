@@ -41,3 +41,16 @@ class Inscricao(models.Model):
     
     def __str__(self):
         return f"{self.usuario.username} - {self.curso.nome}"
+
+
+class RelatorioIA(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+    inscricao = models.ForeignKey(Inscricao, on_delete=models.CASCADE, related_name="relatorios_ia")
+    categorias = models.CharField(max_length=255)
+    comentario_original = models.TextField()
+    relatorio_gerado = models.TextField()
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Relatório de {self.usuario.username} - {self.curso.nome}"

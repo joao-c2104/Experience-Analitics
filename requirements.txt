@@ -1,0 +1,4 @@
+Django
+Pillow
+google-genai
+python-dotenv

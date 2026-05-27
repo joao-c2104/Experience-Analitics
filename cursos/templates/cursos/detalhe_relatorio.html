@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhe do Relatório</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 30px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 8px; }
+        h1 { color: #005b96; }
+        pre {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        a { color: #005b96; font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="{% url 'relatorios' %}">← Voltar para relatórios</a>
+
+    <h1>Relatório de {{ relatorio.usuario.username }}</h1>
+
+    <p><strong>Curso:</strong> {{ relatorio.curso.nome }}</p>
+    <p><strong>Categorias:</strong> {{ relatorio.categorias }}</p>
+    <p><strong>Comentário original:</strong> {{ relatorio.comentario_original }}</p>
+    <p><strong>Data:</strong> {{ relatorio.data_criacao }}</p>
+
+    <h2>Relatório gerado pela IA</h2>
+    <pre>{{ relatorio.relatorio_gerado }}</pre>
+</div>
+</body>
+</html>

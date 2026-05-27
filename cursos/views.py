@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .models import Curso, Inscricao
+from .models import Curso, Inscricao, RelatorioIA
+from .services.gemini_service import gerar_relatorio_com_gemini
 from django.utils import timezone
 from datetime import timedelta
 
@@ -77,20 +80,60 @@ def perfil(request):
 @login_required
 def avaliar_curso(request, inscricao_id):
     inscricao = get_object_or_404(Inscricao, id=inscricao_id, usuario=request.user)
-        
+
     if request.method == "POST":
         if inscricao.status == 'concluido':
             nota_enviada = request.POST.get('nota')
-            pensamento_enviado = request.POST.get('pensamento') # Captura o pensamento
-            
-            if nota_enviada and 0 <= int(nota_enviada) <= 10:
-                inscricao.nota = int(nota_enviada)
-                
-            if pensamento_enviado:
-                inscricao.pensamento = pensamento_enviado.strip()
-                
+            categorias = request.POST.getlist('categorias')
+            pensamento_enviado = request.POST.get('pensamento', '').strip()
+
+            try:
+                nota = int(nota_enviada)
+            except (TypeError, ValueError):
+                nota = None
+
+            if nota is not None and 0 <= nota <= 10:
+                inscricao.nota = nota
+
+            # O perfil continua aceitando somente a nota; o relatório nasce no detalhe.
+            if not categorias and not pensamento_enviado and request.GET.get('next') != 'detalhe':
+                inscricao.save()
+                return redirect('perfil')
+
+            if not categorias:
+                messages.error(request, "Escolha pelo menos uma categoria para o feedback.")
+                return redirect('detalhe_curso', curso_id=inscricao.curso.id)
+
+            if not pensamento_enviado:
+                messages.error(request, "Escreva seu feedback antes de enviar.")
+                return redirect('detalhe_curso', curso_id=inscricao.curso.id)
+
+            try:
+                relatorio = gerar_relatorio_com_gemini(
+                    usuario=request.user,
+                    curso=inscricao.curso,
+                    categorias=categorias,
+                    comentario=pensamento_enviado,
+                    nota=inscricao.nota
+                )
+            except Exception as erro:
+                messages.error(request, f"Não foi possível gerar o relatório com IA: {erro}")
+                return redirect('detalhe_curso', curso_id=inscricao.curso.id)
+
+            inscricao.pensamento = pensamento_enviado
             inscricao.save()
-                
+
+            RelatorioIA.objects.create(
+                usuario=request.user,
+                curso=inscricao.curso,
+                inscricao=inscricao,
+                categorias=", ".join(categorias),
+                comentario_original=pensamento_enviado,
+                relatorio_gerado=relatorio
+            )
+
+            messages.success(request, "Avaliação enviada e relatório com IA gerado com sucesso.")
+
     elif request.method == "GET" and request.GET.get('alterar') == 'true':
         inscricao.nota = None
         inscricao.save()
@@ -99,3 +142,19 @@ def avaliar_curso(request, inscricao_id):
     if origem == 'detalhe':
         return redirect('detalhe_curso', curso_id=inscricao.curso.id)
     return redirect('perfil')
+
+
+@staff_member_required
+def relatorios(request):
+    relatorios_ia = RelatorioIA.objects.all().order_by('-data_criacao')
+    return render(request, 'cursos/relatorios.html', {
+        'relatorios': relatorios_ia
+    })
+
+
+@staff_member_required
+def detalhe_relatorio(request, relatorio_id):
+    relatorio = get_object_or_404(RelatorioIA, id=relatorio_id)
+    return render(request, 'cursos/detalhe_relatorio.html', {
+        'relatorio': relatorio
+    })

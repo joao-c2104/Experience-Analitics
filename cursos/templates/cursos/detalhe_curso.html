@@ -32,6 +32,14 @@
 
     <div class="container">
         <a href="/" class="voltar">← Voltar para a Vitrine</a>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p style="padding: 12px; border-radius: 5px; margin-top: 20px; background: {% if message.tags == 'success' %}#e8f8f5{% else %}#fdecea{% endif %}; color: {% if message.tags == 'success' %}#1e8449{% else %}#c0392b{% endif %};">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
         
         {% if curso.imagem %}
             <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}">
@@ -73,7 +81,7 @@
                         {% if inscricao.pensamento %}
                             <p style="font-size: 15px; color: #555; margin: 0 0 15px 0; font-style: italic;">"{{ inscricao.pensamento }}"</p>
                         {% endif %}
-                        <button type="button" onclick="mostrarFormularioDetalhe()" style="background: none; color: #3498db; border: none; padding: 0; font-size: 14px; font-weight: bold; cursor: pointer;">[ Alterar Nota ou Comentário ]</button>
+                        <button type="button" onclick="mostrarFormularioDetalhe()" style="background: none; color: #3498db; border: none; padding: 0; font-size: 14px; font-weight: bold; cursor: pointer;">[ Alterar avaliação com IA ]</button>
                     </div>
 
                     <div id="nota-form-detalhe" {% if inscricao.nota is not null %}style="display:none;"{% endif %}>
@@ -87,10 +95,40 @@
                                 <option value="10" {% if inscricao.nota == 10 %}selected{% endif %}>10</option>
                             </select>
 
-                            <label style="font-weight: bold; display: block; margin-bottom: 10px;">Compartilhe seu pensamento sobre o curso (Público):</label>
-                            <textarea name="pensamento" rows="4" placeholder="O que você achou do conteúdo? Seu comentário ficará visível na página." style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px; border-radius: 4px; border: 1px solid #ccc; resize: vertical; margin-bottom: 15px;">{% if inscricao.pensamento %}{{ inscricao.pensamento }}{% endif %}</textarea>
+                            <label style="font-weight: bold; display: block; margin-bottom: 10px;">
+                                Sobre qual parte você quer falar?
+                            </label>
 
-                            <button type="submit" style="background: #27ae60; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">Enviar Avaliação</button>
+                            <div style="text-align: left; max-width: 420px; margin: 0 auto 15px auto;">
+                                <p>
+                                    <input type="checkbox" name="categorias" value="Conteúdo do curso">
+                                    Conteúdo do curso
+                                </p>
+
+                                <p>
+                                    <input type="checkbox" name="categorias" value="Organização do site">
+                                    Organização do site
+                                </p>
+
+                                <p>
+                                    <input type="checkbox" name="categorias" value="Tipos de avaliação">
+                                    Tipos de avaliação
+                                </p>
+                            </div>
+
+                            <label style="font-weight: bold; display: block; margin-bottom: 10px;">
+                                Converse com a IA: escreva o que você achou do curso
+                            </label>
+
+                            <textarea name="pensamento" rows="5" placeholder="Exemplo: gostei do conteúdo, mas achei a organização do site confusa..." style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px; border-radius: 4px; border: 1px solid #ccc; resize: vertical; margin-bottom: 15px;">{% if inscricao.pensamento %}{{ inscricao.pensamento }}{% endif %}</textarea>
+
+                            <p style="font-size: 13px; color: #666; margin-top: -5px;">
+                                Seu comentário continuará aparecendo publicamente na página do curso. A IA também vai gerar um relatório privado para o administrador.
+                            </p>
+
+                            <button type="submit" style="background: #8e44ad; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                Enviar avaliação e gerar relatório com IA
+                            </button>
                         </form>
                     </div>
 
