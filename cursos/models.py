@@ -16,6 +16,8 @@ class Inscricao(models.Model):
     STATUS_CHOICES = (
         ('andamento', 'Em Andamento'),
         ('concluido', 'Concluído'),
+        ('abandonado', 'Abandonado'),
+        ('reembolsado', 'Reembolsado'),
     )
     
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
