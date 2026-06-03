@@ -3,10 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.contrib.auth import logout
-from .models import Curso, Inscricao
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Count
+from django.db import models  # <--- ESSA LINHA CORRIGE O ERRO!
+
+from .models import Curso, Inscricao
 
 # --- FUNÇÃO AUXILIAR (STRIKE DIÁRIA) ---
 def verificar_e_aplicar_strikes():
@@ -14,11 +16,10 @@ def verificar_e_aplicar_strikes():
     Varre o banco de dados em busca de inscrições 'Em Andamento' que 
     não registram interação há 15 dias ou mais e altera o status para 'Abandonado'.
     """
-    # Como ultima_interacao é um DateField, pegamos a data de hoje (sem horas)
     hoje = timezone.now().date()
     limite_inatividade = hoje - timedelta(days=15)
     
-    # Filtra quem está em andamento E (passou de 15 dias sem interagir OU nunca interagiu e a inscrição é antiga)
+    # Agora o models.Q vai funcionar perfeitamente
     inscricoes_com_strike = Inscricao.objects.filter(
         status='andamento'
     ).filter(
@@ -26,7 +27,6 @@ def verificar_e_aplicar_strikes():
         models.Q(ultima_interacao__isnull=True, data_inscricao__date__lte=limite_inatividade)
     )
     
-    # Executa o update em massa no banco de dados
     if inscricoes_com_strike.exists():
         inscricoes_com_strike.update(status='abandonado')
 
@@ -136,7 +136,6 @@ def avaliar_curso(request, inscricao_id):
 def solicitar_reembolso_aluno(request, inscricao_id):
     inscricao = get_object_or_404(Inscricao, id=inscricao_id, usuario=request.user)
     
-    # REGRA NOVA: Só permite reembolso se o status for exatamente 'andamento'
     if inscricao.status != 'andamento':
         messages.error(request, "O reembolso só pode ser solicitado enquanto o curso estiver em andamento. Cursos já concluídos não são elegíveis.")
         return redirect('perfil')
@@ -150,7 +149,7 @@ def solicitar_reembolso_aluno(request, inscricao_id):
     return render(request, 'cursos/confirmar_reembolso_aluno.html', {'inscricao': inscricao})
 
 
-# --- VIEWS DE ADMINISTRADOR ATUALIZADAS ---
+# --- VIEWS DE ADMINISTRADOR ---
 
 @staff_member_required
 def dashboard_financeiro(request):
@@ -183,13 +182,11 @@ def dashboard_financeiro(request):
 
 @staff_member_required
 def processar_reembolso(request, order_id):
-    # Recupera a inscrição se ela estiver ativa (andamento ou concluído)
     inscricao = get_object_or_404(Inscricao, id=order_id, status__in=['andamento', 'concluido'])
     
     if request.method == 'POST':
         inscricao.status = 'reembolsado'
         inscricao.save()
-        # Envia feedback visual para o dashboard
         messages.success(request, f"O curso '{inscricao.curso.nome}' do usuário {inscricao.usuario.username} foi reembolsado com sucesso!")
         return redirect('admin_dashboard_financeiro')
         
