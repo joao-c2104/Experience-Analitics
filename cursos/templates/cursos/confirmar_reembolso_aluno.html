@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar Reembolso</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f3f4f6; padding: 50px; text-align: center; }
+        .box { background: white; padding: 40px; max-width: 500px; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn { padding: 12px 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; margin: 10px; }
+        .btn-danger { background-color: #ef4444; color: white; }
+        .btn-secondary { background-color: #9ca3af; color: white; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Solicitação de Reembolso</h2>
+        <p>Você está prestes a cancelar a sua inscrição e solicitar o reembolso do curso <strong>{{ inscricao.curso.nome }}</strong>.</p>
+        <p style="color: #6b7280; font-size: 14px;">Atenção: Ao confirmar, você perderá imediatamente o acesso às aulas e aos materiais do curso.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <a href="{% url 'detalhe_curso' inscricao.curso.id %}" class="btn btn-secondary">Mudei de ideia</a>
+            <button type="submit" class="btn btn-danger">Sim, Quero o Reembolso</button>
+        </form>
+    </div>
+</body>
+</html>

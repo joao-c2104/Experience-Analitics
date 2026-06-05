@@ -19,6 +19,8 @@
         .btn-concluir { background-color: #f39c12; }
         .btn-concluir:hover { background-color: #d35400; }
         .btn-concluido { background-color: #7f8c8d; cursor: not-allowed; }
+        .btn-reembolso { background-color: #e74c3c; margin-top: 15px; }
+        .btn-reembolso:hover { background-color: #c0392b; }
 
         /* Estilos da Seção de Comentários Públicos */
         .secao-comentarios { margin-top: 50px; border-top: 2px solid #eee; padding-top: 30px; }
@@ -134,6 +136,17 @@
 
                 </div>
             {% endif %}
+
+            {% if inscricao %}
+                {% if inscricao.status == 'andamento' %}
+                    <a href="{% url 'solicitar_reembolso_aluno' inscricao.id %}" class="btn btn-reembolso">Solicitar Reembolso deste Curso</a>
+                {% elif inscricao.status == 'reembolsado' %}
+                    <div style="margin-top: 20px; padding: 15px; background-color: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; border-radius: 6px; text-align: center; font-weight: bold;">
+                        Você solicitou o reembolso deste curso. O seu acesso foi revogado.
+                    </div>
+                {% endif %}
+            {% endif %}
+
         {% endif %}
 
         <div class="secao-comentarios">

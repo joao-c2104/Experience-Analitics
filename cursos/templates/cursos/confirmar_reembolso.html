@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Confirmar Reembolso</h1>
+    <p>Você tem certeza que deseja reembolsar o Pedido <strong>{{ order.id }}</strong> do aluno <strong>{{ order.user.email }}</strong>?</p>
+    <p>Curso: {{ order.course.nome }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="submit-row">
+            <input type="submit" value="Sim, Reembolsar" class="default" style="background-color: #ba2121; float: left;">
+            <a href="{% url 'admin_dashboard_financeiro' %}" class="button" style="margin-left: 10px; padding: 10px 15px; background: #ccc; color: #333; text-decoration: none; border-radius: 4px;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
