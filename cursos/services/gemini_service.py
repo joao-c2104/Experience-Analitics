@@ -49,7 +49,7 @@ Liste apenas pontos positivos que possam ser percebidos no comentário.
 Se não houver pontos positivos claros, escreva que o aluno não mencionou pontos positivos diretamente.
 
 4. Pontos de melhoria identificados
-Liste os problemas, críticas ou dificuldades mencionadas pelo aluno.
+Caso o aluno mencione problemas,liste esses problemas, críticas ou dificuldades mencionadas pelo aluno.
 
 5. Sugestões para melhoria
 Dê sugestões práticas relacionadas às categorias escolhidas pelo aluno.
@@ -57,11 +57,19 @@ Dê sugestões práticas relacionadas às categorias escolhidas pelo aluno.
 6. Resumo final para o administrador
 Faça um resumo objetivo explicando o que o administrador deve observar nesse feedback.
 
+7. Possíveis ações futuras
+Liste possíveis ações que o administrador pode tomar com base na avaliação do aluno.
+As ações devem ser práticas, específicas e relacionadas aos pontos mencionados no feedback.
+Se o feedback não indicar nenhuma ação clara, escreva que não há ações específicas sugeridas.
+Organize as ações em ordem de prioridade, da mais importante para a menos importante.
+
 Regras:
 - Não invente informações.
 - Não diga que algo aconteceu se não estiver no comentário.
 - Seja claro, organizado e profissional.
 - O relatório deve ajudar o administrador a melhorar o curso e a plataforma.
+- Não use Markdown, asteriscos, negrito, bullets com * ou formatação especial.
+- Use texto simples, com títulos e linhas curtas.
 """
 
     with genai.Client(api_key=settings.GEMINI_API_KEY) as client:

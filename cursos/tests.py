@@ -60,3 +60,14 @@ class AcessoRelatoriosIATests(TestCase):
         resposta = self.client.get(reverse("detalhe_relatorio", args=[self.relatorio.id]))
 
         self.assertContains(resposta, "Relatório privado.")
+
+    def test_relatorio_remove_marcadores_markdown_na_exibicao(self):
+        self.relatorio.relatorio_gerado = "**1. Identificação**\n- **Aluno:** aluno"
+        self.relatorio.save()
+        self.client.force_login(self.admin)
+
+        resposta = self.client.get(reverse("detalhe_relatorio", args=[self.relatorio.id]))
+
+        self.assertContains(resposta, "1. Identificação")
+        self.assertContains(resposta, "Aluno: aluno")
+        self.assertNotContains(resposta, "**Aluno:**")
