@@ -18,7 +18,7 @@
         <p style="color: #6b7280; font-size: 14px;">Esta ação não poderá ser desfeita e mudará o status da inscrição para reembolsado.</p>
         
         <form method="POST">
-            {% csrf_csrf_token %}
+            {% csrf_token %}
             <a href="{% url 'admin_dashboard_financeiro' %}" class="btn btn-secondary">Cancelar</a>
             <button type="submit" class="btn btn-danger">Sim, Confirmar Reembolso</button>
         </form>

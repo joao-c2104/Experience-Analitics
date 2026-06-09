@@ -2,13 +2,16 @@ from django.conf import settings
 from google import genai
 
 
-def gerar_relatorio_com_gemini(usuario, curso, categorias, comentario, nota=None):
-    if not settings.GEMINI_API_KEY:
-        raise ValueError("A variável de ambiente GEMINI_API_KEY não foi configurada.")
+class GeminiService:
+    def __init__(self):
+        if not settings.GEMINI_API_KEY:
+            raise ValueError("A variável de ambiente GEMINI_API_KEY não foi configurada.")
+        self._api_key = settings.GEMINI_API_KEY
 
-    categorias_texto = ", ".join(categorias)
+    def gerar_relatorio(self, usuario, curso, categorias, comentario, nota=None):
+        categorias_texto = ", ".join(categorias)
 
-    prompt = f"""
+        prompt = f"""
 Você é um assistente de análise educacional.
 
 Sua tarefa é transformar o feedback de um estudante em um relatório administrativo
@@ -72,13 +75,13 @@ Regras:
 - Use texto simples, com títulos e linhas curtas.
 """
 
-    with genai.Client(api_key=settings.GEMINI_API_KEY) as client:
-        response = client.models.generate_content(
-            model=settings.GEMINI_MODEL,
-            contents=prompt,
-        )
+        with genai.Client(api_key=self._api_key) as client:
+            response = client.models.generate_content(
+                model=settings.GEMINI_MODEL,
+                contents=prompt,
+            )
 
-    if not response.text:
-        raise ValueError("O Gemini não retornou texto.")
+        if not response.text:
+            raise ValueError("O Gemini não retornou texto.")
 
-    return response.text.strip()
+        return response.text.strip()

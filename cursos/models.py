@@ -1,6 +1,8 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.utils import timezone
+from datetime import timedelta
 
 class Curso(models.Model):
     nome = models.CharField(max_length=200)
@@ -40,7 +42,18 @@ class Inscricao(models.Model):
         if self.ultima_interacao:
             return self.ultima_interacao == timezone.now().date()
         return False
-    
+
+    @classmethod
+    def aplicar_strikes(cls):
+        hoje = timezone.now().date()
+        limite_inatividade = hoje - timedelta(days=15)
+        cls.objects.filter(
+            status='andamento'
+        ).filter(
+            Q(ultima_interacao__lte=limite_inatividade) |
+            Q(ultima_interacao__isnull=True, data_inscricao__date__lte=limite_inatividade)
+        ).update(status='abandonado')
+
     def __str__(self):
         return f"{self.usuario.username} - {self.curso.nome}"
 
