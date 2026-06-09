@@ -15,7 +15,7 @@
         }
 
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding-bottom: 20px; }
-        
+
         .navbar {
             background-color: #005b96;
             color: white;
@@ -25,9 +25,9 @@
             padding: 15px 30px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
+
         .navbar h2 { margin: 0; font-size: 24px; }
-        
+
         .menu a {
             color: #005b96;
             background-color: white;
@@ -45,6 +45,46 @@
         .menu span { margin-right: 15px; font-weight: bold; }
 
         h1 { text-align: center; color: #333; margin-top: 30px; }
+
+        .barra-busca {
+            display: flex;
+            gap: 10px;
+            max-width: 620px;
+            margin: 0 auto 28px;
+        }
+
+        .barra-busca input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .barra-busca button,
+        .limpar-busca {
+            border: 0;
+            border-radius: 6px;
+            background: #005b96;
+            color: white;
+            padding: 12px 18px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .limpar-busca {
+            display: inline-flex;
+            align-items: center;
+            background: #6c757d;
+        }
+
+        .resultado-busca {
+            max-width: 1200px;
+            margin: 0 auto 18px;
+            color: #555;
+            text-align: center;
+        }
         
         .grade-cursos {
             display: grid;
@@ -88,6 +128,26 @@
     </div>
 
     <h1>Cursos Disponíveis</h1>
+
+    <form class="barra-busca" method="get" action="{% url 'buscar_cursos' %}">
+        <input
+            type="search"
+            name="q"
+            value="{{ query|default:'' }}"
+            placeholder="Buscar cursos..."
+            aria-label="Buscar cursos"
+        >
+        <button type="submit">Buscar</button>
+        {% if query %}
+            <a class="limpar-busca" href="{% url 'lista_cursos' %}">Limpar</a>
+        {% endif %}
+    </form>
+
+    {% if query %}
+        <p class="resultado-busca">
+            {{ total_resultados }} resultado{{ total_resultados|pluralize }} para "{{ query }}"
+        </p>
+    {% endif %}
 
     <div class="grade-cursos">
         {% for curso in cursos %}
