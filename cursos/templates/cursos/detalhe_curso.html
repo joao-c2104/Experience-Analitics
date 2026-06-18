@@ -3,95 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ curso.nome }} | Experience Analytics</title>
+    <title>{{ curso.nome }} - Detalhes</title>
     <style>
-        :root {
-            --primary: #005b96;
-            --primary-hover: #00416d;
-            --background: #f4f6f9;
-            --surface: #ffffff;
-            --text: #1f2937;
-            --text-secondary: #4b5563;
-            --border: #e5e7eb;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--background); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 20px; 
-        }
-
-        .container { max-width: 850px; margin: 40px auto; background: var(--surface); padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .voltar { text-decoration: none; color: var(--primary); font-weight: 600; display: inline-block; margin-bottom: 20px; }
-        .voltar:hover { color: var(--primary-hover); }
-
-        h1 { color: var(--text); margin: 10px 0; font-size: 28px; }
-        .preco { font-size: 24px; color: #10b981; font-weight: 700; margin: 15px 0; }
-        .descricao { font-size: 16px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .voltar { text-decoration: none; color: #005b96; font-weight: bold; }
+        img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-top: 20px; }
+        h1 { color: #333; margin-top: 20px; }
+        .preco { font-size: 24px; color: #2ecc71; font-weight: bold; margin: 20px 0; }
+        .descricao { font-size: 16px; color: #555; line-height: 1.6; margin-bottom: 30px; }
         
-        .btn { display: block; text-align: center; text-decoration: none; padding: 14px; border-radius: 6px; font-weight: bold; font-size: 16px; transition: background 0.2s; border: none; cursor: pointer; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-reembolso { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; margin-top: 15px; }
-        .btn-reembolso:hover { background: #fecaca; }
+        .btn { display: block; text-align: center; text-decoration: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 5px; margin-top: 30px; color: white; transition: background 0.3s; }
+        .btn-comprar { background-color: #2ecc71; }
+        .btn-comprar:hover { background-color: #27ae60; }
+        .btn-concluir { background-color: #f39c12; }
+        .btn-concluir:hover { background-color: #d35400; }
+        .btn-concluido { background-color: #7f8c8d; cursor: not-allowed; }
+        .btn-reembolso { background-color: #e74c3c; margin-top: 15px; }
+        .btn-reembolso:hover { background-color: #c0392b; }
 
-        .status-block { margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; font-weight: 600; }
-
-        .secao-comentarios { margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border); }
-        .secao-comentarios h2 { font-size: 20px; color: var(--text); margin-bottom: 20px; }
-        .card-comentario { background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; }
-        .autor-comentario { font-weight: 600; font-size: 14px; margin: 0 0 5px 0; color: var(--text); }
-        .nota-comentario { color: #f59e0b; font-weight: normal; }
-        .texto-comentario { margin: 0; font-size: 14px; color: var(--text-secondary); font-style: italic; }
+        /* Estilos da Seção de Comentários Públicos */
+        .secao-comentarios { margin-top: 50px; border-top: 2px solid #eee; padding-top: 30px; }
+        .card-comentario { background: #fdfdfd; border: 1px solid #eaeaea; padding: 15px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .autor-comentario { font-weight: bold; color: #2c3e50; font-size: 14px; margin: 0 0 5px 0; }
+        .texto-comentario { color: #555; font-size: 15px; margin: 0; font-style: italic; }
+        .nota-comentario { color: #f1c40f; font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <a href="{% url 'perfil' %}" class="voltar">← Voltar para o Perfil</a>
-        
+        <a href="/" class="voltar">← Voltar para a Vitrine</a>
+
         {% if messages %}
             {% for message in messages %}
-                <p style="padding: 12px; border-radius: 6px; margin-top: 20px; background: #e8f8f5; color: #1e8449;">
+                <p style="padding: 12px; border-radius: 5px; margin-top: 20px; background: {% if message.tags == 'success' %}#e8f8f5{% else %}#fdecea{% endif %}; color: {% if message.tags == 'success' %}#1e8449{% else %}#c0392b{% endif %};">
                     {{ message }}
                 </p>
             {% endfor %}
         {% endif %}
-
+        
+        {% if curso.imagem %}
+            <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}">
+        {% endif %}
+        
         <h1>{{ curso.nome }}</h1>
-        <div class="preco">R$ {{ curso.preco }}</div>
+        <p class="preco">R$ {{ curso.preco }}</p>
+        
         <div class="descricao">
+            <h3>Sobre este curso:</h3>
             <p>{{ curso.descricao }}</p>
         </div>
 
-        {% if inscricao %}
-            {% if inscricao.status == 'andamento' %}
-                <a href="{% url 'solicitar_reembolso_aluno' inscricao.id %}" class="btn btn-reembolso">Solicitar Reembolso deste Curso</a>
-            {% elif inscricao.status == 'concluido' %}
-                <div class="status-block" style="background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;">
-                    🎉 Você concluiu este curso! O acesso ao reembolso foi permanentemente revogado via interface e backend.
+        {% if not user.is_authenticated %}
+            <a href="/admin/" class="btn btn-comprar">Faça login para Comprar</a>
+        {% else %}
+            {% if not inscricao %}
+                <a href="{% url 'acao_curso' curso.id %}" class="btn btn-comprar">Comprar Curso</a>
+            {% elif inscricao.status == 'andamento' %}
+                <a href="{% url 'acao_curso' curso.id %}" class="btn btn-concluir">Marcar Curso como Concluído</a>
+
+                <div style="margin-top: 15px; padding: 15px; border-radius: 6px; text-align: center; font-size: 15px; font-weight: bold;
+                            {% if inscricao.acessado_hoje %} background-color: #e8f8f5; color: #27ae60; border: 1px solid #a3e4d7; {% else %} background-color: #fdf2e9; color: #d35400; border: 1px solid #f5cba7; {% endif %}">
+                    
+                    {% if inscricao.acessado_hoje %}
+                        🎉 Ofensiva de hoje garantida! Você já estudou este curso hoje.
+                    {% else %}
+                        ⏳ Computando presença... Entre nesta aba diariamente para manter seus dias seguidos atualizados!
+                    {% endif %}
                 </div>
-            {% elif inscricao.status == 'reembolsado' %}
-                <div class="status-block" style="background-color: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;">
-                    Você solicitou o reembolso deste curso. O seu acesso foi integralmente revogado.
+
+            {% elif inscricao.status == 'concluido' %}
+                <span class="btn btn-concluido">✓ Curso Concluído!</span>
+
+                <div style="margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 5px; border: 1px solid #ddd; text-align: center;">
+                    
+                    <div id="nota-exibicao-detalhe" {% if inscricao.nota is null %}style="display:none;"{% endif %}>
+                        <p style="font-size: 18px; font-weight: bold; margin: 0 0 5px 0;">⭐ Sua Nota: {{ inscricao.nota }}/10</p>
+                        {% if inscricao.pensamento %}
+                            <p style="font-size: 15px; color: #555; margin: 0 0 15px 0; font-style: italic;">"{{ inscricao.pensamento }}"</p>
+                        {% endif %}
+                        <button type="button" onclick="mostrarFormularioDetalhe()" style="background: none; color: #3498db; border: none; padding: 0; font-size: 14px; font-weight: bold; cursor: pointer;">[ Alterar avaliação com IA ]</button>
+                    </div>
+
+                    <div id="nota-form-detalhe" {% if inscricao.nota is not null %}style="display:none;"{% endif %}>
+                        <form action="{% url 'avaliar_curso' inscricao.id %}?next=detalhe" method="POST">
+                            {% csrf_token %}
+                            <label style="font-weight: bold; display: block; margin-bottom: 10px;">Avalie este curso:</label>
+                            <select name="nota" required style="padding: 8px; font-size: 16px; border-radius: 4px; margin-bottom: 15px;">
+                                {% for i in "0123456789" %}
+                                    <option value="{{ forloop.counter0 }}" {% if inscricao.nota == forloop.counter0 %}selected{% endif %}>{{ forloop.counter0 }}</option>
+                                {% endfor %}
+                                <option value="10" {% if inscricao.nota == 10 %}selected{% endif %}>10</option>
+                            </select>
+
+                            <label style="font-weight: bold; display: block; margin-bottom: 10px;">
+                                Sobre qual parte você quer falar?
+                            </label>
+
+                            <div style="text-align: left; max-width: 420px; margin: 0 auto 15px auto;">
+                                <p>
+                                    <input type="checkbox" name="categorias" value="Conteúdo do curso">
+                                    Conteúdo do curso
+                                </p>
+
+                                <p>
+                                    <input type="checkbox" name="categorias" value="Organização do site">
+                                    Organização do site
+                                </p>
+
+                                <p>
+                                    <input type="checkbox" name="categorias" value="Tipos de avaliação">
+                                    Tipos de avaliação
+                                </p>
+                            </div>
+
+                            <label style="font-weight: bold; display: block; margin-bottom: 10px;">
+                                Converse com a IA: escreva o que você achou do curso
+                            </label>
+
+                            <textarea name="pensamento" rows="5" placeholder="Exemplo: gostei do conteúdo, mas achei a organização do site confusa..." style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px; border-radius: 4px; border: 1px solid #ccc; resize: vertical; margin-bottom: 15px;">{% if inscricao.pensamento %}{{ inscricao.pensamento }}{% endif %}</textarea>
+
+                            <p style="font-size: 13px; color: #666; margin-top: -5px;">
+                                Seu comentário continuará aparecendo publicamente na página do curso. A IA também vai gerar um relatório privado para o administrador.
+                            </p>
+
+                            <button type="submit" style="background: #8e44ad; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                Enviar avaliação e gerar relatório com IA
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
             {% endif %}
+
+            {% if inscricao %}
+                {% if inscricao.status == 'andamento' %}
+                    <a href="{% url 'solicitar_reembolso_aluno' inscricao.id %}" class="btn btn-reembolso">Solicitar Reembolso deste Curso</a>
+                {% elif inscricao.status == 'reembolsado' %}
+                    <div style="margin-top: 20px; padding: 15px; background-color: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; border-radius: 6px; text-align: center; font-weight: bold;">
+                        Você solicitou o reembolso deste curso. O seu acesso foi revogado.
+                    </div>
+                {% endif %}
+            {% endif %}
+
         {% endif %}
 
         <div class="secao-comentarios">
-            <h2>💭 Opinião dos Alunos ({{ pensamentos_publicos.count }})</h2>
+            <h2>💭 Pensamentos dos Alunos ({{ pensamentos_publicos.count }})</h2>
             {% for p in pensamentos_publicos %}
                 <div class="card-comentario">
                     <p class="autor-comentario">👤 {{ p.usuario.username }} <span class="nota-comentario">— ⭐ {{ p.nota }}/10</span></p>
                     <p class="texto-comentario">"{{ p.pensamento }}"</p>
                 </div>
             {% empty %}
-                <p style="color: var(--text-secondary); font-style: italic; font-size: 14px;">Nenhum comentário processado para este curso ainda.</p>
+                <p style="color: #7f8c8d; font-style: italic;">Nenhum aluno compartilhou um pensamento sobre este curso ainda. Conclua o curso e seja o primeiro!</p>
             {% endfor %}
         </div>
+
     </div>
 
+    <script>
+        function mostrarFormularioDetalhe() {
+            document.getElementById('nota-exibicao-detalhe').style.display = 'none';
+            document.getElementById('nota-form-detalhe').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
