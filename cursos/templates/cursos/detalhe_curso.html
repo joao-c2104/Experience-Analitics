@@ -5,36 +5,302 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ curso.nome }} - Detalhes</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .voltar { text-decoration: none; color: #005b96; font-weight: bold; }
-        img { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-top: 20px; }
-        h1 { color: #333; margin-top: 20px; }
-        .preco { font-size: 24px; color: #2ecc71; font-weight: bold; margin: 20px 0; }
-        .descricao { font-size: 16px; color: #555; line-height: 1.6; margin-bottom: 30px; }
-        
-        .btn { display: block; text-align: center; text-decoration: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 5px; margin-top: 30px; color: white; transition: background 0.3s; }
-        .btn-comprar { background-color: #2ecc71; }
-        .btn-comprar:hover { background-color: #27ae60; }
-        .btn-concluir { background-color: #f39c12; }
-        .btn-concluir:hover { background-color: #d35400; }
-        .btn-concluido { background-color: #7f8c8d; cursor: not-allowed; }
-        .btn-reembolso { background-color: #e74c3c; margin-top: 15px; }
-        .btn-reembolso:hover { background-color: #c0392b; }
+        /* ===== Paleta de cores ===== */
+        :root{
+            --primary:#2f63e0;
+            --primary-dark:#1e4fc4;
+            --bg:#f5f7ff;
+            --surface:#ffffff;
+            --text:#0f172a;
+            --muted:#64748b;
+            --border:#e2e8f0;
+            --success:#10b981;
+            --warning:#f59e0b;
+            --danger:#ef4444;
+        }
+    
+        *{
+            box-sizing:border-box;
+        }
+    
+        body{
+            margin:0;
+            padding:40px 20px;
+            background:var(--bg);
+            font-family:'Segoe UI',sans-serif;
+            color:var(--text);
+        }
+    
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+    
+        .voltar{
+            display:inline-block;
+            margin-bottom:20px;
+            text-decoration:none;
+            color:var(--primary);
+            font-weight:600;
+        }
+    
+        /* Layout principal: curso à esquerda, painel do aluno à direita */
+        .hero{
+            display:grid;
+            grid-template-columns:1.6fr 1fr;
+            gap:30px;
+        }
+    
+        .course-card,
+        .action-card,
+        .card-comentario{
+            background:white;
+            border-radius:20px;
+            border:1px solid var(--border);
+            box-shadow:0 10px 30px rgba(0,0,0,.05);
+        }
+    
+        .course-card{
+            padding:30px;
+        }
+    
+        /* ===== Painel do Aluno ===== */
+        .action-card{
+            padding:25px;
+            height:fit-content;
+    
+            background:var(--primary);
+            color:white;
+    
+            border-radius:20px;
+            border:none;
+            box-shadow:0 10px 30px rgba(47,99,224,.25);
+        }
+    
+        .action-card h3{
+            color:white;
+            margin-top:0;
+        }
+    
+        .action-card label,
+        .action-card p,
+        .action-card span{
+            color:#ffffff;
+        }
+    
+        .action-card .texto-apoio{
+            color:rgba(255,255,255,.85);
+        }
+    
+        .action-card select{
+            background:#ffffff;
+            color:var(--text);
+            border:1px solid var(--border);
+            border-radius:8px;
+            padding:8px 12px;
+            font-size:14px;
+        }
+    
+        .action-card input[type="checkbox"]{
+            accent-color:#ffffff;
+        }
 
-        /* Estilos da Seção de Comentários Públicos */
-        .secao-comentarios { margin-top: 50px; border-top: 2px solid #eee; padding-top: 30px; }
-        .card-comentario { background: #fdfdfd; border: 1px solid #eaeaea; padding: 15px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .autor-comentario { font-weight: bold; color: #2c3e50; font-size: 14px; margin: 0 0 5px 0; }
-        .texto-comentario { color: #555; font-size: 15px; margin: 0; font-style: italic; }
-        .nota-comentario { color: #f1c40f; font-size: 13px; font-weight: bold; }
+        .action-card textarea{
+            width:100%;
+            background:#ffffff;
+            color:var(--text);
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:12px;
+            font-family:inherit;
+            font-size:14px;
+            resize:vertical;
+        }
+    
+        .action-card textarea::placeholder{
+            color:var(--muted);
+        }
+
+        /* Caixa interna do formulário de avaliação (dentro do painel azul).
+           Antes tinha fundo inline cinza-claro (#f9f9f9) competindo com o
+           texto branco das labels -> por isso ficava ilegível.
+           Agora usa um branco translúcido para se diferenciar do azul de
+           fundo sem virar uma "segunda caixa" opaca e sem conflito de cor. */
+        .painel-avaliacao{
+            margin-top:25px;
+            padding:20px;
+            background:rgba(255,255,255,.12);
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,.25);
+            text-align:center;
+        }
+
+        /* Bloco "Sua Nota: X/10" + comentário, exibido após já ter avaliado */
+        .nota-exibicao p{
+            color:#ffffff;
+        }
+
+        .nota-exibicao .comentario-salvo{
+            color:rgba(255,255,255,.85);
+            font-style:italic;
+        }
+
+        .link-alterar-avaliacao{
+            background:none;
+            border:none;
+            padding:0;
+            font-size:14px;
+            font-weight:bold;
+            cursor:pointer;
+            color:#ffffff;
+            text-decoration:underline;
+        }
+
+        /* Grupo de checkboxes de categoria */
+        .categorias-feedback{
+            text-align:left;
+            max-width:420px;
+            margin:0 auto 15px auto;
+        }
+
+        .categorias-feedback p{
+            color:#ffffff;
+        }
+
+        /* Texto de aviso pequeno abaixo do textarea */
+        .aviso-comentario{
+            font-size:13px;
+            color:rgba(255,255,255,.75);
+            margin-top:-5px;
+        }
+
+        .btn-enviar-avaliacao{
+            background:#8e44ad;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            font-size:16px;
+            border-radius:4px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+    
+        .course-image{
+            width:100%;
+            height:320px;
+            object-fit:cover;
+            border-radius:14px;
+            margin-bottom:20px;
+        }
+    
+        .badge{
+            color:var(--primary);
+            font-weight:700;
+            font-size:13px;
+            letter-spacing:1px;
+            text-transform:uppercase;
+        }
+    
+        h1{
+            margin:10px 0;
+            font-size:48px;
+        }
+    
+        .preco{
+            font-size:30px;
+            font-weight:700;
+            color:var(--success);
+        }
+    
+        .descricao{
+            margin-top:25px;
+            line-height:1.8;
+            color:var(--muted);
+        }
+    
+        .btn{
+            display:block;
+            width:100%;
+            text-align:center;
+            text-decoration:none;
+            padding:14px;
+            border:none;
+            border-radius:10px;
+            font-size:15px;
+            font-weight:600;
+            cursor:pointer;
+            margin-top:15px;
+        }
+    
+        .btn-comprar{
+            background:var(--primary);
+            color:white;
+        }
+    
+        .btn-comprar:hover{
+            background:var(--primary-dark);
+        }
+    
+        .btn-concluir{
+            background:var(--warning);
+            color:white;
+        }
+    
+        .btn-reembolso{
+            background:#fee2e2;
+            color:#dc2626;
+            border:1px solid #fecaca;
+        }
+    
+        .btn-concluido{
+            background:#ecfdf5;
+            color:#065f46 !important;
+        }
+    
+        .secao-comentarios{
+            margin-top:50px;
+        }
+    
+        .secao-comentarios h2{
+            margin-bottom:20px;
+        }
+    
+        .card-comentario{
+            padding:18px;
+            margin-bottom:15px;
+        }
+    
+        .autor-comentario{
+            font-weight:700;
+        }
+    
+        .texto-comentario{
+            color:var(--muted);
+            margin-top:8px;
+        }
+    
+        .nota-comentario{
+            color:#f59e0b;
+        }
+    
+        @media(max-width:900px){
+            .hero{
+                grid-template-columns:1fr;
+            }
+    
+            h1{
+                font-size:36px;
+            }
+        }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <a href="/" class="voltar">← Voltar para a Vitrine</a>
+        <a href="/" class="voltar">← Voltar</a>
 
+        <div class="hero">
+
+            <div class="course-card">
         {% if messages %}
             {% for message in messages %}
                 <p style="padding: 12px; border-radius: 5px; margin-top: 20px; background: {% if message.tags == 'success' %}#e8f8f5{% else %}#fdecea{% endif %}; color: {% if message.tags == 'success' %}#1e8449{% else %}#c0392b{% endif %};">
@@ -44,7 +310,7 @@
         {% endif %}
         
         {% if curso.imagem %}
-            <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}">
+            <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}" class="course-image">
         {% endif %}
         
         <h1>{{ curso.nome }}</h1>
@@ -54,6 +320,11 @@
             <h3>Sobre este curso:</h3>
             <p>{{ curso.descricao }}</p>
         </div>
+
+        </div>
+
+        <div class="action-card">
+            <h3>Painel do Aluno</h3>
 
         {% if not user.is_authenticated %}
             <a href="/admin/" class="btn btn-comprar">Faça login para Comprar</a>
@@ -76,21 +347,21 @@
             {% elif inscricao.status == 'concluido' %}
                 <span class="btn btn-concluido">✓ Curso Concluído!</span>
 
-                <div style="margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 5px; border: 1px solid #ddd; text-align: center;">
-                    
-                    <div id="nota-exibicao-detalhe" {% if inscricao.nota is null %}style="display:none;"{% endif %}>
+                <div class="painel-avaliacao">
+
+                    <div id="nota-exibicao-detalhe" class="nota-exibicao" {% if inscricao.nota is null %}style="display:none;"{% endif %}>
                         <p style="font-size: 18px; font-weight: bold; margin: 0 0 5px 0;">⭐ Sua Nota: {{ inscricao.nota }}/10</p>
                         {% if inscricao.pensamento %}
-                            <p style="font-size: 15px; color: #555; margin: 0 0 15px 0; font-style: italic;">"{{ inscricao.pensamento }}"</p>
+                            <p class="comentario-salvo" style="font-size: 15px; margin: 0 0 15px 0;">"{{ inscricao.pensamento }}"</p>
                         {% endif %}
-                        <button type="button" onclick="mostrarFormularioDetalhe()" style="background: none; color: #3498db; border: none; padding: 0; font-size: 14px; font-weight: bold; cursor: pointer;">[ Alterar avaliação com IA ]</button>
+                        <button type="button" onclick="mostrarFormularioDetalhe()" class="link-alterar-avaliacao">[ Alterar avaliação com IA ]</button>
                     </div>
 
                     <div id="nota-form-detalhe" {% if inscricao.nota is not null %}style="display:none;"{% endif %}>
                         <form action="{% url 'avaliar_curso' inscricao.id %}?next=detalhe" method="POST">
                             {% csrf_token %}
                             <label style="font-weight: bold; display: block; margin-bottom: 10px;">Avalie este curso:</label>
-                            <select name="nota" required style="padding: 8px; font-size: 16px; border-radius: 4px; margin-bottom: 15px;">
+                            <select name="nota" required style="margin-bottom: 15px;">
                                 {% for i in "0123456789" %}
                                     <option value="{{ forloop.counter0 }}" {% if inscricao.nota == forloop.counter0 %}selected{% endif %}>{{ forloop.counter0 }}</option>
                                 {% endfor %}
@@ -101,7 +372,7 @@
                                 Sobre qual parte você quer falar?
                             </label>
 
-                            <div style="text-align: left; max-width: 420px; margin: 0 auto 15px auto;">
+                            <div class="categorias-feedback">
                                 <p>
                                     <input type="checkbox" name="categorias" value="Conteúdo do curso">
                                     Conteúdo do curso
@@ -122,13 +393,13 @@
                                 Converse com a IA: escreva o que você achou do curso
                             </label>
 
-                            <textarea name="pensamento" rows="5" placeholder="Exemplo: gostei do conteúdo, mas achei a organização do site confusa..." style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px; border-radius: 4px; border: 1px solid #ccc; resize: vertical; margin-bottom: 15px;">{% if inscricao.pensamento %}{{ inscricao.pensamento }}{% endif %}</textarea>
+                            <textarea name="pensamento" rows="5" placeholder="Exemplo: gostei do conteúdo, mas achei a organização do site confusa..." style="margin-bottom: 15px;">{% if inscricao.pensamento %}{{ inscricao.pensamento }}{% endif %}</textarea>
 
-                            <p style="font-size: 13px; color: #666; margin-top: -5px;">
+                            <p class="aviso-comentario">
                                 Seu comentário continuará aparecendo publicamente na página do curso. A IA também vai gerar um relatório privado para o administrador.
                             </p>
 
-                            <button type="submit" style="background: #8e44ad; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                            <button type="submit" class="btn-enviar-avaliacao">
                                 Enviar avaliação e gerar relatório com IA
                             </button>
                         </form>
@@ -148,6 +419,9 @@
             {% endif %}
 
         {% endif %}
+
+        </div>
+        </div>
 
         <div class="secao-comentarios">
             <h2>💭 Pensamentos dos Alunos ({{ pensamentos_publicos.count }})</h2>
