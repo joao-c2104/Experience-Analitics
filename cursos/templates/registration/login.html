@@ -8,101 +8,162 @@
     <link rel="stylesheet" href="{% static 'cursos/login.css' %}">
 </head>
 <body>
+
+    <!-- ========== TOPBAR ========== -->
     <header class="topbar">
-        <strong class="brand">Experience Analytics</strong>
-        <nav>
-            <a href="#">Cursos</a>
+        <a href="{% url 'lista_cursos' %}" class="topbar__logo" aria-label="Experience Analytics — página inicial">
+            <span class="topbar__logo-mark" aria-hidden="true">M</span>
+            <span class="topbar__logo-text">Experience Analytics</span>
+        </a>
+
+        <nav class="topbar__nav" aria-label="Menu principal">
+            <a href="{% url 'lista_cursos' %}">Cursos</a>
             <a href="#">Eventos</a>
             <a href="#">Conteúdos</a>
-            <a href="{% url 'login' %}">Entrar</a>
         </nav>
+
+        <div class="topbar__actions">
+            <a href="{% url 'login' %}" class="btn btn--outline btn--sm">
+                <span class="icon-placeholder" aria-hidden="true"></span>
+                Entrar
+            </a>
+        </div>
     </header>
 
+    <!-- ========== CONTEÚDO PRINCIPAL ========== -->
     <main class="login-page">
-        <section class="welcome">
-            <div>
-                <span class="eyebrow">Plataforma de cursos</span>
-                <h1>Bem-vindo de volta!</h1>
-                <p>Acesse sua conta para continuar aprendendo e acompanhar seus cursos disponíveis.</p>
+
+        <!-- Lado esquerdo: apresentação e benefícios -->
+        <section class="login-page__welcome" aria-label="Apresentação">
+
+            <div class="welcome__hero">
+                <p class="welcome__eyebrow">PLATAFORMA DE CURSOS</p>
+                <h1 class="welcome__title">Bem-vindo<br>ao Experience Analytics!</h1>
+                <p class="welcome__subtitle">
+                    Acesse sua conta para continuar aprendendo e acompanhar seus cursos disponíveis.
+                </p>
             </div>
 
-            <div class="benefits">
-                <article>
-                    <span>01</span>
+            <ul class="welcome__benefits" aria-label="Benefícios da plataforma">
+                <li class="benefit">
+                    <span class="benefit__icon benefit__icon--blue" aria-hidden="true">
+                        {# Ícone de capelo — substituir por <img src="{% static 'img/icon-aprenda.svg' %}"> #}
+                        <span class="icon-placeholder"></span>
+                    </span>
                     <div>
-                        <strong>Aprenda</strong>
-                        <p>Cursos e capacitações para seu crescimento.</p>
+                        <strong class="benefit__title">Aprenda</strong>
+                        <p class="benefit__desc">Cursos e capacitações para seu crescimento profissional.</p>
                     </div>
-                </article>
-                <article>
-                    <span>02</span>
+                </li>
+                <li class="benefit">
+                    <span class="benefit__icon benefit__icon--purple" aria-hidden="true">
+                        <span class="icon-placeholder"></span>
+                    </span>
                     <div>
-                        <strong>Gerencie</strong>
-                        <p>Acompanhe seus conteúdos em um só lugar.</p>
+                        <strong class="benefit__title">Gerencie</strong>
+                        <p class="benefit__desc">Acompanhe seus conteúdos e progresso em um só lugar.</p>
                     </div>
-                </article>
-                <article>
-                    <span>03</span>
+                </li>
+                <li class="benefit">
+                    <span class="benefit__icon benefit__icon--green" aria-hidden="true">
+                        <span class="icon-placeholder"></span>
+                    </span>
                     <div>
-                        <strong>Conecte-se</strong>
-                        <p>Entre na plataforma e continue sua jornada.</p>
+                        <strong class="benefit__title">Conecte-se</strong>
+                        <p class="benefit__desc">Entre na plataforma e continue sua jornada de aprendizado.</p>
                     </div>
-                </article>
+                </li>
+            </ul>
+
+            {# Mosaico de fotos — substituir cada .photo por <img src="{% static '...' %}" alt="..."> #}
+            <div class="welcome__mosaic" aria-hidden="true">
+                <div class="photo photo--1"></div>
+                <div class="photo photo--2"></div>
+                <div class="photo photo--3"></div>
+                <span class="deco deco--pink-1"></span>
+                <span class="deco deco--pink-2"></span>
             </div>
         </section>
 
-        <section class="login-card" aria-labelledby="login-title">
-            <h2 id="login-title">Acesse sua conta</h2>
-            <p>Informe seus dados para entrar na plataforma</p>
+        <!-- Lado direito: formulário de login -->
+        <section class="login-page__card" aria-labelledby="login-title">
 
+            <h2 id="login-title" class="card__title">Acesse sua conta</h2>
+            <p class="card__subtitle">Informe seus dados para entrar na plataforma</p>
+
+            {# Erro de autenticação #}
             {% if form.errors %}
-                <div class="form-error">Usuário ou senha inválidos. Tente novamente.</div>
+                <div class="form-error" role="alert">
+                    Usuário ou senha inválidos. Tente novamente.
+                </div>
             {% endif %}
 
-            <form method="post" novalidate>
+            <form method="post" novalidate class="login-form">
                 {% csrf_token %}
 
-                <label for="{{ form.username.id_for_label }}">Usuário</label>
-                <input
-                    type="text"
-                    name="{{ form.username.html_name }}"
-                    id="{{ form.username.id_for_label }}"
-                    autocomplete="username"
-                    placeholder="Digite seu usuário"
-                    value="{{ form.username.value|default_if_none:'' }}"
-                    required
-                >
-
-                <label for="{{ form.password.id_for_label }}">Senha</label>
-                <div class="password-field">
-                    <input
-                        type="password"
-                        name="{{ form.password.html_name }}"
-                        id="{{ form.password.id_for_label }}"
-                        autocomplete="current-password"
-                        placeholder="Digite sua senha"
-                        required
-                    >
-                    <button type="button" id="toggle-password" aria-label="Mostrar senha">Ver</button>
+                <!-- Campo: Usuário -->
+                <div class="form-field">
+                    <label for="{{ form.username.id_for_label }}" class="form-field__label">
+                        Usuário
+                    </label>
+                    <div class="form-field__input-wrap">
+                        <span class="field-icon icon-placeholder" aria-hidden="true"></span>
+                        <input
+                            type="text"
+                            name="{{ form.username.html_name }}"
+                            id="{{ form.username.id_for_label }}"
+                            class="form-field__input"
+                            autocomplete="username"
+                            placeholder="Digite seu usuário"
+                            value="{{ form.username.value|default_if_none:'' }}"
+                            required
+                        >
+                    </div>
                 </div>
 
+                <!-- Campo: Senha -->
+                <div class="form-field">
+                    <label for="{{ form.password.id_for_label }}" class="form-field__label">
+                        Senha
+                    </label>
+                    <div class="form-field__input-wrap">
+                        <span class="field-icon icon-placeholder" aria-hidden="true"></span>
+                        <input
+                            type="password"
+                            name="{{ form.password.html_name }}"
+                            id="{{ form.password.id_for_label }}"
+                            class="form-field__input"
+                            autocomplete="current-password"
+                            placeholder="Digite sua senha"
+                            required
+                        >
+                        {# Botão de toggle — JS em login.js #}
+                        <button
+                            type="button"
+                            class="field-icon field-icon--toggle"
+                            id="toggle-password"
+                            aria-label="Mostrar senha"
+                        >
+                            <span class="icon-placeholder" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lembrar acesso / Esqueci senha -->
                 <div class="form-row">
-                    <label class="remember">
+                    <label class="form-row__remember">
                         <input type="checkbox" name="remember">
                         Lembrar meu acesso
                     </label>
-                    <a href="#">Esqueci minha senha</a>
+                    <a href="#" class="form-row__forgot">Esqueci minha senha</a>
                 </div>
 
-                <button class="primary-button" type="submit">Entrar</button>
+                <!-- Botão principal -->
+                <button type="submit" class="btn btn--primary btn--block">Entrar</button>
             </form>
+
         </section>
     </main>
-
-    <footer class="footer">
-        <strong>Experience Analytics</strong>
-        <span>© 2026 Plataforma de Cursos</span>
-    </footer>
 
     <script src="{% static 'cursos/login.js' %}"></script>
 </body>
