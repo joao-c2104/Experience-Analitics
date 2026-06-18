@@ -1,195 +1,376 @@
-* {
+*, *::before, *::after {
     box-sizing: border-box;
 }
 
 body {
     min-height: 100vh;
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
     color: #17213f;
-    background: #f6f9ff;
+    background: #f0f4fc;
 }
 
+/* ── HEADER ── */
 .topbar {
-    height: 64px;
+    height: 68px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 32px;
     padding: 0 48px;
     background: #fff;
     border-bottom: 1px solid #dfe7f7;
 }
 
 .brand {
-    color: #1656d9;
-    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #17213f;
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
 }
 
 .topbar nav {
     display: flex;
-    gap: 28px;
+    gap: 32px;
     align-items: center;
+    flex: 1;
 }
 
-.topbar a {
-    color: #243152;
+.topbar nav a {
+    color: #3d4e6b;
     font-size: 14px;
+    font-weight: 500;
     text-decoration: none;
+    transition: color 0.2s;
 }
 
-.login-page {
-    min-height: calc(100vh - 156px);
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 420px;
-    gap: 72px;
+.topbar nav a:hover {
+    color: #1656d9;
+}
+
+.topbar-cta {
+    display: flex;
     align-items: center;
-    width: min(1160px, calc(100% - 48px));
-    margin: 0 auto;
-    padding: 48px 0;
+    gap: 6px;
+    padding: 0 18px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1.5px solid #d7def0;
+    color: #17213f;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: border-color 0.2s, color 0.2s;
 }
 
+.topbar-cta:hover {
+    border-color: #1656d9;
+    color: #1656d9;
+}
+
+/* ── MAIN LAYOUT ── */
+.login-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px 440px;
+    gap: 40px;
+    align-items: start;
+    width: min(1280px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 48px 0 64px;
+}
+
+/* ── COLUNA ESQUERDA ── */
 .welcome {
     display: grid;
-    gap: 34px;
+    gap: 32px;
 }
 
 .eyebrow {
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     color: #1656d9;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
 }
 
-.welcome h1 {
-    max-width: 420px;
-    margin: 0;
+.welcome-text h1 {
+    margin: 0 0 16px;
     color: #17213f;
-    font-size: 48px;
-    line-height: 1.05;
+    font-size: 44px;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
 }
 
-.welcome p {
+.welcome-text > p {
     max-width: 440px;
+    margin: 0;
     color: #53607d;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.65;
 }
 
+/* ── COMPOSIÇÃO DE FOTOS ── */
+.photo-collage {
+    position: relative;
+    width: 380px;
+    height: 580px;
+}
+
+.col-img {
+    position: absolute;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(23, 33, 63, 0.15);
+}
+
+.col-img--main {
+    width: 220px;
+    height: 260px;
+    top: 0;
+    left: 0;
+    transform: rotate(-2deg);
+    z-index: 2;
+}
+
+.col-img--sec1 {
+    width: 150px;
+    height: 150px;
+    top: 140px;
+    left: 200px;
+    transform: rotate(3deg);
+    z-index: 3;
+}
+
+.col-img--sec2 {
+    width: 220px;
+    height: 220px;
+    top: 310px;
+    left: 30px;
+    transform: rotate(-1deg);
+    z-index: 1;
+}
+
+.deco {
+    position: absolute;
+    border-radius: 6px;
+}
+
+/* azul, perto do canto superior de sec1 — atrás de sec1 (z<3) */
+.deco-1 {
+    width: 32px;
+    height: 32px;
+    background: #1656d9;
+    top: 130px;
+    left: 215px;
+    transform: rotate(15deg);
+    z-index: 2;
+}
+
+/* rosa, perto da borda esquerda de main — atrás de main (z<2) */
+.deco-2 {
+    width: 24px;
+    height: 24px;
+    background: #e9197b;
+    bottom: 80px;
+    left: -10px;
+    transform: rotate(-10deg);
+    z-index: 1;
+}
+
+/* rosa, entre sec1 e sec2 — atrás de sec1 (z<3), na frente de sec2 */
+.deco-3 {
+    width: 28px;
+    height: 28px;
+    background: #e9197b;
+    top: 290px;
+    left: 200px;
+    transform: rotate(20deg);
+    z-index: 2;
+}
+
+/* azul, perto do canto inferior de sec2 — atrás de sec2 (z<1) */
+.deco-4 {
+    width: 20px;
+    height: 20px;
+    background: #1656d9;
+    bottom: -8px;
+    left: 180px;
+    transform: rotate(12deg);
+    z-index: 0;
+}
+
+/* ── BENEFÍCIOS ── */
 .benefits {
     display: grid;
-    gap: 18px;
+    gap: 16px;
 }
 
 .benefits article {
     display: grid;
-    grid-template-columns: 46px 1fr;
+    grid-template-columns: 48px 1fr;
     gap: 14px;
     align-items: start;
 }
 
-.benefits span {
+.benefit-icon {
     display: grid;
     place-items: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 8px;
-    color: #1656d9;
-    background: #eaf0ff;
-    font-weight: 700;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    flex-shrink: 0;
 }
+
+.benefit-icon--blue   { background: #eaf0ff; color: #1656d9; }
+.benefit-icon--purple { background: #f3eeff; color: #7c3aed; }
+.benefit-icon--teal   { background: #eafaf4; color: #0d9488; }
 
 .benefits strong {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+    font-size: 15px;
+    color: #17213f;
 }
 
 .benefits p {
     margin: 0;
-    font-size: 14px;
+    color: #53607d;
+    font-size: 13px;
+    line-height: 1.55;
 }
 
+/* ── CARTÃO DE LOGIN ── */
 .login-card {
-    padding: 42px;
-    border-radius: 8px;
+    position: static;
+    padding: 44px 42px;
+    border-radius: 16px;
     background: #fff;
-    box-shadow: 0 18px 60px rgba(23, 33, 63, 0.12);
+    box-shadow: 0 20px 64px rgba(23, 33, 63, 0.13);
 }
 
 .login-card h2 {
     margin: 0 0 8px;
     text-align: center;
-    font-size: 28px;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    color: #17213f;
 }
 
 .login-card > p {
-    margin: 0 0 30px;
+    margin: 0 0 32px;
     text-align: center;
     color: #66728d;
     font-size: 14px;
 }
 
+/* ── ERROS ── */
 .form-error {
-    margin-bottom: 18px;
-    padding: 12px;
-    border-radius: 6px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
     color: #8a1f1f;
     background: #ffe9e9;
     font-size: 14px;
+    border-left: 3px solid #d93838;
 }
 
+/* ── FORMULÁRIO ── */
 form {
     display: grid;
-    gap: 12px;
+    gap: 16px;
+}
+
+.field-group {
+    display: grid;
+    gap: 6px;
 }
 
 label {
     color: #253457;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    z-index: 1;
 }
 
 input[type="text"],
 input[type="password"] {
     width: 100%;
-    height: 48px;
-    padding: 0 14px;
-    border: 1px solid #d7def0;
-    border-radius: 6px;
+    height: 50px;
+    padding: 0 14px 0 42px;
+    border: 1.5px solid #d7def0;
+    border-radius: 8px;
     color: #17213f;
+    font-size: 14px;
     outline: none;
+    background: #fafbff;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input:focus {
+input[type="text"]:focus,
+input[type="password"]:focus {
     border-color: #1656d9;
-    box-shadow: 0 0 0 3px rgba(22, 86, 217, 0.12);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(22, 86, 217, 0.1);
 }
 
-.password-field {
-    position: relative;
+input::placeholder {
+    color: #a8b4cc;
 }
 
 .password-field input {
-    padding-right: 58px;
+    padding-right: 52px;
 }
 
 .password-field button {
     position: absolute;
-    top: 7px;
-    right: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    width: 34px;
     height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 0;
     border-radius: 6px;
-    color: #1656d9;
-    background: #eef4ff;
+    background: transparent;
+    color: #8fa0bf;
     cursor: pointer;
+    transition: background 0.2s, color 0.2s;
 }
 
+.password-field button:hover {
+    background: #eef4ff;
+    color: #1656d9;
+}
+
+/* ── LINHA LEMBRAR / ESQUECI ── */
 .form-row {
     display: flex;
     justify-content: space-between;
     gap: 18px;
     align-items: center;
-    margin: 2px 0 8px;
+    margin: 0 0 4px;
 }
 
 .remember {
@@ -197,70 +378,196 @@ input:focus {
     gap: 8px;
     align-items: center;
     color: #53607d;
+    font-size: 13px;
     font-weight: 400;
+    cursor: pointer;
+}
+
+.remember input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    accent-color: #1656d9;
 }
 
 .form-row a {
     color: #1656d9;
     font-size: 13px;
+    font-weight: 500;
     text-decoration: none;
 }
 
+.form-row a:hover {
+    text-decoration: underline;
+}
+
+/* ── BOTÃO ENTRAR ── */
 .primary-button {
-    height: 50px;
+    width: 100%;
+    height: 52px;
     border: 0;
-    border-radius: 6px;
+    border-radius: 8px;
     color: #fff;
     background: #1656d9;
+    font-size: 15px;
     font-weight: 700;
+    letter-spacing: 0.01em;
     cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
 }
 
 .primary-button:hover {
     background: #0f45b5;
 }
 
-.footer {
-    min-height: 92px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 48px;
-    color: #fff;
-    background: #0647d9;
+.primary-button:active {
+    transform: scale(0.99);
 }
 
-@media (max-width: 860px) {
+/* ── RODAPÉ ── */
+.footer {
+    background: #0f2060;
+    color: #c8d4f0;
+}
+
+.footer-inner {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 52px 0 40px;
+}
+
+.footer-brand {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+}
+
+.footer-brand strong {
+    color: #fff;
+    font-size: 16px;
+}
+
+.footer-brand p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #8fa6d0;
+}
+
+.footer-col {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+}
+
+.footer-col strong {
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.footer-col a {
+    color: #8fa6d0;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-col a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-bottom span {
+    color: #6680a8;
+    font-size: 12px;
+}
+
+/* ── RESPONSIVO ── */
+@media (max-width: 1000px) {
+    .login-page {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        width: min(100% - 32px, 520px);
+        padding: 32px 0 48px;
+    }
+
+    /* ordem visual: texto+benefícios → fotos → login */
+    .welcome       { order: 1; }
+    .photo-collage { order: 2; }
+    .login-card    { order: 3; }
+
+    .photo-collage {
+        width: 266px;
+        height: 406px;
+    }
+    .col-img--main  { width: 154px; height: 182px; }
+    .col-img--sec1  { width: 105px; height: 105px; top: 98px;  left: 140px; }
+    .col-img--sec2  { width: 154px; height: 154px; top: 217px; left: 21px;  }
+    .deco-1 { width: 22px; height: 22px; top: 91px;  left: 150px; }
+    .deco-2 { width: 17px; height: 17px; bottom: 56px; left: -7px; }
+    .deco-3 { width: 20px; height: 20px; top: 203px; left: 140px; }
+    .deco-4 { width: 14px; height: 14px; bottom: -6px; left: 126px; }
+
+    .footer-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+}
+
+@media (max-width: 680px) {
     .topbar {
         height: auto;
-        display: grid;
-        gap: 14px;
-        padding: 18px 24px;
+        flex-wrap: wrap;
+        padding: 16px 20px;
+        row-gap: 12px;
     }
 
     .topbar nav {
+        flex: 0 0 100%;
+        order: 3;
         flex-wrap: wrap;
-        gap: 14px;
+        gap: 16px;
     }
 
-    .login-page {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        width: min(100% - 32px, 520px);
-        padding: 32px 0;
+    .topbar-cta {
+        margin-left: auto;
     }
 
-    .welcome h1 {
-        font-size: 36px;
+    .welcome-text h1 {
+        font-size: 34px;
     }
+
+    .photo-collage {
+        width: 209px;
+        height: 319px;
+    }
+    .col-img--main  { width: 121px; height: 143px; }
+    .col-img--sec1  { width: 83px;  height: 83px;  top: 77px;  left: 110px; }
+    .col-img--sec2  { width: 121px; height: 121px; top: 171px; left: 17px;  }
+    .deco-1 { width: 18px; height: 18px; top: 72px;  left: 118px; }
+    .deco-2 { width: 13px; height: 13px; bottom: 44px; left: -6px; }
+    .deco-3 { width: 15px; height: 15px; top: 160px; left: 110px; }
+    .deco-4 { width: 11px; height: 11px; bottom: -4px; left: 99px; }
 
     .login-card {
-        padding: 28px;
+        padding: 28px 24px;
     }
 
-    .footer {
-        display: grid;
-        gap: 8px;
-        padding: 24px;
+    .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 40px 0 28px;
     }
 }
