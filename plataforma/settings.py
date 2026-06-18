@@ -27,9 +27,9 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = 'django-insecure-4$kqj@r!hboq7)p%9zccq^^=uzwsjr&2=(p4h%mv=tjl((=dl8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -131,3 +132,5 @@ LOGOUT_REDIRECT_URL = 'login'
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
