@@ -19,12 +19,13 @@
             background-color: var(--bg-main);
             color: var(--dark);
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
 
         .header {
@@ -149,6 +150,17 @@
 </head>
 <body>
 
+    <div style="background-color:#005b96;color:white;display:flex;justify-content:space-between;align-items:center;padding:15px 30px;box-shadow:0 2px 5px rgba(0,0,0,0.1);margin-bottom:0;">
+        <h2 style="margin:0;font-size:24px;">Sebrae Cursos (Clone)</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+            <span style="font-weight:bold;">Olá, {{ request.user.username }}!</span>
+            <a href="{% url 'admin_dashboard_financeiro' %}" style="color:#005b96;background:white;text-decoration:none;padding:8px 15px;border-radius:5px;font-weight:bold;">Dashboard</a>
+            <a href="{% url 'relatorios' %}" style="color:#005b96;background:white;text-decoration:none;padding:8px 15px;border-radius:5px;font-weight:bold;">Relatórios</a>
+            <a href="{% url 'lista_cursos_admin' %}" style="color:#005b96;background:white;text-decoration:none;padding:8px 15px;border-radius:5px;font-weight:bold;">Lista de Cursos</a>
+            <a href="{% url 'sair' %}" style="color:white;background:#e74c3c;text-decoration:none;padding:8px 15px;border-radius:5px;font-weight:bold;">Sair</a>
+        </div>
+    </div>
+
     <div class="container">
         {% if messages %}
             <ul class="messages">
@@ -160,7 +172,6 @@
 
         <div class="header">
             <h1>Painel de Análise & Finanças</h1>
-            <a href="/admin/" class="btn-voltar">← Voltar pro Admin</a>
         </div>
 
         <div class="cards-grid">

@@ -119,6 +119,7 @@
                 <a href="{% url 'perfil' %}">Meu Perfil</a>
                 {% if user.is_staff %}
                     <a href="{% url 'relatorios' %}">Relatórios</a>
+                    <a href="{% url 'admin_dashboard_financeiro' %}">Dashboard</a>
                 {% endif %}
                 <a href="{% url 'sair' %}" class="btn-sair">Sair</a>
             {% else %}

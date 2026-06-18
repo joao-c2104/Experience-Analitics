@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.ListaCursosView.as_view(), name='lista_cursos'),
+    path('redirect/', views.LoginRedirectView.as_view(), name='login_redirect'),
+    path('cursos/', views.ListaCursosAdminView.as_view(), name='lista_cursos_admin'),
     path('logout/', views.FazerLogoutView.as_view(), name='sair'),
     path('curso/<int:curso_id>/', views.DetalheCursoView.as_view(), name='detalhe_curso'),
     path('curso/<int:curso_id>/acao/', views.AcaoCursoView.as_view(), name='acao_curso'),

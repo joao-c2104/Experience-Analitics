@@ -13,6 +13,13 @@ from .models import Curso, Inscricao, RelatorioIA
 from .services.gemini_service import GeminiService
 
 
+class LoginRedirectView(View):
+    def get(self, request):
+        if request.user.is_staff:
+            return redirect('admin_dashboard_financeiro')
+        return redirect('lista_cursos')
+
+
 class FazerLogoutView(View):
     def get(self, request):
         logout(request)
@@ -20,6 +27,14 @@ class FazerLogoutView(View):
 
 
 class ListaCursosView(LoginRequiredMixin, View):
+    def get(self, request):
+        if request.user.is_staff:
+            return redirect('admin_dashboard_financeiro')
+        cursos = Curso.objects.all()
+        return render(request, 'cursos/lista_cursos.html', {'cursos': cursos})
+
+
+class ListaCursosAdminView(LoginRequiredMixin, View):
     def get(self, request):
         cursos = Curso.objects.all()
         return render(request, 'cursos/lista_cursos.html', {'cursos': cursos})
