@@ -2,48 +2,148 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Relatórios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Experience Analytics</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 8px; margin-top: 20px; }
-        h1 { color: #005b96; }
+        /* ===== Paleta de cores do projeto ===== */
+        :root {
+            --c-primary: #2563EB;
+            --c-primary-dark: #1D4ED8;
+            --c-ink: #0F172A;
+            --c-text: #334155;
+            --c-muted: #64748B;
+            --c-bg: #EEF2FF;
+            --c-card: #FFFFFF;
+            --c-border: #E2E8F0;
+            --c-danger: #DC2626;
+            --c-danger-dark: #B91C1C;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            margin: 0;
+            padding-bottom: 40px;
+        }
+
+        /* ===== Navbar (mesmo padrão do dashboard financeiro) ===== */
+        .navbar {
+            background-color: var(--c-card);
+            border-bottom: 1px solid var(--c-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            margin-bottom: 30px;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--c-ink);
+            font-weight: 800;
+        }
+
+        .navbar .menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar .menu span {
+            font-weight: 600;
+            color: var(--c-text);
+            margin-right: 4px;
+        }
+
+        .navbar .menu a {
+            color: var(--c-primary);
+            background-color: #EFF4FF;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .navbar .menu a:hover {
+            background-color: #DCE6FF;
+        }
+
+        .navbar .menu a.btn-sair {
+            background-color: var(--c-danger);
+            color: white;
+        }
+
+        .navbar .menu a.btn-sair:hover {
+            background-color: var(--c-danger-dark);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: var(--c-ink);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        /* ===== Lista de relatórios ===== */
         .btn-relatorio {
             display: block;
-            background: #005b96;
-            color: white;
+            background: var(--c-card);
+            color: var(--c-ink);
             text-decoration: none;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-weight: bold;
+            padding: 18px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--c-border);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            margin-bottom: 12px;
+            font-weight: 600;
+            transition: background 0.15s ease, border-color 0.15s ease;
         }
-        .btn-relatorio:hover { background: #00416d; }
-        a { color: #005b96; font-weight: bold; text-decoration: none; }
+
+        .btn-relatorio:hover {
+            background: #F8FAFF;
+            border-color: var(--c-primary);
+        }
+
+        .estado-vazio {
+            color: var(--c-muted);
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
 
-    <div style="background-color:#005b96;color:white;display:flex;justify-content:space-between;align-items:center;padding:15px 30px;box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-        <h2 style="margin:0;font-size:24px;">Sebrae Cursos (Clone)</h2>
-        <div style="display:flex;gap:10px;align-items:center;">
-            <span style="font-weight:bold;">Olá, {{ request.user.username }}!</span>
-            <a href="{% url 'admin_dashboard_financeiro' %}" style="color:#005b96;background:white;text-decoration:none;padding:8px 15px;border-radius:5px;font-weight:bold;">Dashboard</a>
-            <a href="{% url 'relatorios' %}" style="color:#005b96;background:white;text-decoration:none;padding:8px 15px;border-radius:5px;font-weight:bold;">Relatórios</a>
-            <a href="{% url 'lista_cursos_admin' %}" style="color:#005b96;background:white;text-decoration:none;padding:8px 15px;border-radius:5px;font-weight:bold;">Lista de Cursos</a>
-            <a href="{% url 'sair' %}" style="color:white;background:#e74c3c;text-decoration:none;padding:8px 15px;border-radius:5px;font-weight:bold;">Sair</a>
+    <div class="navbar">
+        <h2>Experience Analytics</h2>
+        <div class="menu">
+            <span>Olá, {{ request.user.username }}!</span>
+            <a href="{% url 'admin_dashboard_financeiro' %}">Dashboard</a>
+            <a href="{% url 'relatorios' %}">Relatórios</a>
+            <a href="{% url 'lista_cursos_admin' %}">Lista de Cursos</a>
+            <a href="{% url 'sair' %}" class="btn-sair">Sair</a>
         </div>
     </div>
 
-<div class="container">
-    <h1>Relatórios</h1>
+    <div class="container">
+        <h1>Relatórios</h1>
 
-    {% for relatorio in relatorios %}
-        <a class="btn-relatorio" href="{% url 'detalhe_relatorio' relatorio.id %}">
-            Relatório de {{ relatorio.usuario.username }} - {{ relatorio.curso.nome }}
-        </a>
-    {% empty %}
-        <p>Nenhum relatório foi gerado ainda.</p>
-    {% endfor %}
-</div>
+        {% for relatorio in relatorios %}
+            <a class="btn-relatorio" href="{% url 'detalhe_relatorio' relatorio.id %}">
+                Relatório de {{ relatorio.usuario.username }} - {{ relatorio.curso.nome }}
+            </a>
+        {% empty %}
+            <p class="estado-vazio">Nenhum relatório foi gerado ainda.</p>
+        {% endfor %}
+    </div>
+
 </body>
 </html>
