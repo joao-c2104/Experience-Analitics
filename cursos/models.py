@@ -6,7 +6,7 @@ from datetime import timedelta
 
 class Curso(models.Model):
     nome = models.CharField(max_length=200)
-    imagem = models.ImageField(max_length=500, blank=True, null=True)
+    imagem = models.URLField(max_length=500, blank=True, null=True)
     resumo = models.CharField(max_length=250, default="Resumo do curso...")
     descricao = models.TextField(default="Descrição detalhada do curso...")
     preco = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
