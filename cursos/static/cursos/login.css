@@ -248,6 +248,7 @@ button {
     background: var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-card);
+    object-fit: cover;
 }
 
 .photo--1 {
