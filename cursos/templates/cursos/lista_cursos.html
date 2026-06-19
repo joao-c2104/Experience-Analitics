@@ -29,7 +29,6 @@
 
         a { text-decoration: none; }
 
-        /* ---------- Navbar ---------- */
         .navbar {
             background-color: var(--c-card);
             border-bottom: 1px solid var(--c-border);
@@ -81,7 +80,6 @@
             background-color: var(--c-danger-dark) !important;
         }
 
-        /* ---------- Busca ---------- */
         .barra-busca {
             display: flex;
             gap: 10px;
@@ -142,7 +140,6 @@
             padding: 0 20px;
         }
 
-        /* ---------- Cabeçalho da seção ---------- */
         .section-header {
             max-width: 1200px;
             margin: 40px auto 24px;
@@ -167,7 +164,6 @@
             border-radius: 6px;
         }
 
-        /* ---------- Grid de cursos ---------- */
         .grade-cursos {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -192,7 +188,6 @@
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
         }
 
-        /* Tags decorativas (canal de acesso) */
         .card-curso__tags {
             display: flex;
             gap: 8px;
@@ -334,7 +329,7 @@
                 </div>
                 <div class="card-curso__img-wrap">
                     {% if curso.imagem %}
-                        <img src="{{ curso.imagem.url }}" alt="{{ curso.nome }}">
+                        <img src="{{ curso.imagem }}" alt="{{ curso.nome }}">
                     {% else %}
                         <div class="card-curso__img-placeholder" aria-hidden="true"></div>
                     {% endif %}
